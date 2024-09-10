@@ -15,6 +15,17 @@ export const clearHistory = async () => {
   return API.delete('/history/clear');
 };
 
+// translation voicehistory
+export const getvoiceHistory = () => API.get('/voicehistory');
+export const addvoiceHistory = (text, translatedText, user) =>
+  API.post('/voicehistory/add', { text, translatedText, user });
+export const deletevoiceHistoryEntry = (id) => API.delete(`/voicehistory/delete/${id}`);
+export const clearvoiceHistory = async () => {
+  return API.delete('/voicehistory/clear');
+};
+
+
+
 // API calls for the Favorites feature
 export const getFavorites = () => API.get('/favorites/');
 export const addFavorite = (text, translatedText, user) =>

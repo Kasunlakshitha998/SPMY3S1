@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { translateText } from './translateText';
+import { voicetranslateText } from './VoicetranslateText';
 import TranslatorImage from './TranslatorImage';
 import { addFavorite } from '../../services/api';
 import { Filter } from 'bad-words';
@@ -13,7 +12,7 @@ import {
 } from '@heroicons/react/solid';
 import Sidebar from '../Nav/Sidebar';
 
-const TranslatorHome = ({ user }) => {
+const VoiceHome = ({ user }) => {
   const [fromText, setFromText] = useState('');
   const [translatedText, setTranslatedText] = useState('');
   const [fromLang, setFromLang] = useState('en');
@@ -22,11 +21,10 @@ const TranslatorHome = ({ user }) => {
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('Text');
   const filter = new Filter();
-  const navigate = useNavigate(); // Initialize navigate function
 
   // Function to handle translation
   const handleTranslateText = () => {
-    translateText(
+    voicetranslateText(
       fromText,
       fromLang,
       toLang,
@@ -42,11 +40,6 @@ const TranslatorHome = ({ user }) => {
     const temp = fromLang;
     setFromLang(toLang);
     setToLang(temp);
-  };
-
-  // Function to navigate to VvoiceTranslation
-  const handleVoice = () => {
-    navigate('/VoiceHome');
   };
 
   // Function to copy translated text to clipboard
@@ -89,37 +82,39 @@ const TranslatorHome = ({ user }) => {
   };
 
   // Function for Speech-to-Text
-  const handleSpeechToText = () => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+const handleSpeechToText = () => {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    if (!SpeechRecognition) {
-      setError('Speech Recognition is not supported in this browser.');
-      return;
-    }
+  if (!SpeechRecognition) {
+    setError('Speech Recognition is not supported in this browser.');
+    return;
+  }
 
-    const recognition = new SpeechRecognition();
-    recognition.lang = fromLang; // Set the language for speech recognition
-    recognition.interimResults = false;
+  const recognition = new SpeechRecognition();
+  recognition.lang = fromLang; // Set the language for speech recognition
+  recognition.interimResults = false;
 
-    recognition.onstart = () => {
-      console.log('Speech recognition started');
-      setLoading(true);
-    };
-
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      setFromText(transcript);
-      setLoading(false);
-    };
-
-    recognition.onerror = (event) => {
-      setError(`Error occurred in recognition: ${event.error}`);
-      setLoading(false);
-    };
-
-    recognition.start();
+  recognition.onstart = () => {
+    console.log('Speech recognition started');
+    setLoading(true);
   };
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    setFromText(transcript);
+    setLoading(false);
+  };
+
+  recognition.onerror = (event) => {
+    setError(`Error occurred in recognition: ${event.error}`);
+    setLoading(false);
+  };
+
+  recognition.start();
+};
+
+
 
   return (
     <div className="flex h-screen">
@@ -182,7 +177,12 @@ const TranslatorHome = ({ user }) => {
 
               {/* Language Dropdowns */}
               <div className="flex items-center justify-between gap-4">
-            
+                <button
+                  className="text-gray-600 hover:text-gray-800 transition duration-300"
+                  onClick={handleSpeechToText}
+                >
+                  <MicrophoneIcon className="h-6 w-6" />
+                </button>
 
                 <select
                   value={fromLang}
@@ -209,48 +209,48 @@ const TranslatorHome = ({ user }) => {
                   <option value="en">English</option>
                 </select>
 
-            
+                <button
+                  className="text-gray-600 hover:text-gray-800 transition duration-300"
+                  onClick={handleTextToSpeech}
+                >
+                  <SpeakerphoneIcon className="h-6 w-6" />
+                </button>
               </div>
 
               {/* Translate Button */}
               <button
                 onClick={handleTranslateText}
-                className={`w-full py-3 mt-6 rounded-lg text-white ${
-                  loading ? 'bg-blue-400' : 'bg-blue-500 hover:bg-blue-600'
+                className={`w-full py-3 rounded-lg text-white font-semibold ${
+                  loading ? 'bg-gray-500' : 'bg-blue-600 hover:bg-blue-700'
                 } transition duration-300`}
                 disabled={loading}
               >
-                {loading ? 'Translating...' : 'Translate'}
+                {loading ? 'Translating...' : 'Translate Text'}
               </button>
 
-              {/* New Navigation Button for Voice Translation */}
-              <button
-                onClick={handleVoice}
-                className="w-full py-3 mt-4 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition duration-300"
-              >
-                Voice Translation
-              </button>
-
-              {/* Error and Success Messages */}
-              {error && <div className="text-red-500 mt-4">{error}</div>}
-              {translatedText && (
-                <div className="flex items-center gap-4 mt-4">
-                  <button
-                    onClick={handleAddToFavorite}
-                    className="flex items-center text-green-600 hover:text-green-800 transition duration-300"
-                  >
-                    <HeartIcon className="h-6 w-6" />
-                    <span className="ml-2">Add to Favorites</span>
-                  </button>
-                </div>
+              {error && (
+                <p className="text-red-500 text-center mt-2">{error}</p>
               )}
+
+              {/* Add to Favorite Button */}
+              <button
+                onClick={handleAddToFavorite}
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg flex items-center mt-4"
+              >
+                <HeartIcon className="h-6 w-6 mr-2" />
+                Add to Favorites
+              </button>
             </div>
           )}
 
           {/* Image Translation Tab */}
           {activeTab === 'Image' && (
             <div>
-              <TranslatorImage user={user} />
+              <TranslatorImage
+                fromLang={fromLang}
+                toLang={toLang}
+                user={user}
+              />
             </div>
           )}
         </div>
@@ -259,4 +259,4 @@ const TranslatorHome = ({ user }) => {
   );
 };
 
-export default TranslatorHome;
+export default VoiceHome;

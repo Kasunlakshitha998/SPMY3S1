@@ -47,6 +47,22 @@ const Sidebar = () => {
                 <span className="text-lg">History</span>
               </NavLink>
             </li>
+
+
+            {/* History Link Voice */}
+             <li className="mb-6">
+              <NavLink
+                to="/voicehistory"
+                activeClassName="bg-blue-500 text-white"
+                className="flex items-center px-6 py-3 hover:bg-blue-500 hover:text-white text-gray-800 transition-colors duration-200"
+              >
+                <span className="text-xl mr-4">🎤</span>
+                <span className="text-lg">Voice History</span>
+              </NavLink>
+            </li>
+
+
+
           </ul>
         </nav>
       </div>
@@ -58,3 +74,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+//<NavLink to="/voicehistory" activeClassName="active-link">

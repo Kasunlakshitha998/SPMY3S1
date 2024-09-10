@@ -6,6 +6,8 @@ import Login from "./components/Auth/Login";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import TranslatorHome from './components/Translator/TranslatorHome';
 import ImageList from './components/ImageList';
+import VoiceHome from './components/Translator/VoiceHome';
+import VoiceHistory from './components/VoiceHistory';
 
 const clientId =
   '112541839051-8mcghudktegcedp8c7o9prqvfrvgng27.apps.googleusercontent.com';
@@ -27,7 +29,9 @@ const App = () => {
           />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/history" element={<History />} />
-          <Route path="/imageTranslator" element={< ImageList/>} />
+          <Route path="/imageTranslator" element={<ImageList />} />
+          <Route path="/voicehome" element={<VoiceHome />} />
+          <Route path="/voicehistory" element={<VoiceHistory />} />
         </Routes>
       </div>
     </Router>
