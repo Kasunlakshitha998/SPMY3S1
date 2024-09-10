@@ -73,6 +73,8 @@ const TranslatorImage = ({ fromLang, toLang, user }) => {
     );
   };
 
+  const currentUserId = '66e042a6d4152e85db6224ef'; 
+
   const handleSave = async () => {
     if (!imageBase64) {
       setError('No image selected.');
@@ -80,16 +82,13 @@ const TranslatorImage = ({ fromLang, toLang, user }) => {
     }
 
     try {
-      const response = await axios.post(
-        'http://localhost:5000/imageSave/add',
-        {
-          user: user, // Pass user info as needed
-          image: imageBase64,
-          originalText: fromText,
-          translatedText: translatedText,
-          createdAt: new Date(),
-        }
-      );
+      const response = await axios.post('http://localhost:5000/imageSave/add', {
+        user: currentUserId, // Pass user info as needed
+        image: imageBase64,
+        originalText: fromText,
+        translatedText: translatedText,
+        createdAt: new Date(),
+      });
       console.log(response.data);
       navigate('/imageTranslator');
     } catch (err) {

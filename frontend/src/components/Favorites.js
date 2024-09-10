@@ -5,28 +5,39 @@ import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 import Sidebar from './Nav/Sidebar';
 
+
 const Favorites = () => {
   const [favorites, setFavorites] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(6); //item coun page
+  const [itemsPerPage] = useState(6); //item count per page
   const [startDate, setStartDate] = useState(null); // State for DatePicker
   const [endDate, setEndDate] = useState(null); // State for DatePicker
+  
+
+  // Fetch the current user ID when the component loads
+  const currentUserId = '66e042a6d4152e85db6224ef';
 
   // Fetch favorites from the API when the component loads
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
         const response = await getFavorites();
-        setFavorites(response.data);
+        // Filter favorites by the current user ID
+        const userFavorites = response.data.filter(
+          (fav) => fav.user === currentUserId
+        );
+        setFavorites(userFavorites);
       } catch (error) {
         console.error('Failed to fetch favorites:', error);
       }
     };
 
-    fetchFavorites();
-  }, []);
+    if (currentUserId) {
+      fetchFavorites();
+    }
+  }, [currentUserId]); // Re-run this effect when the user ID is set
 
   // Handle select and deselect of an individual item
   const handleSelectItem = (id) => {

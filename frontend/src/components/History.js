@@ -5,10 +5,17 @@ import Sidebar from './Nav/Sidebar';
 const History = () => {
   const [history, setHistory] = useState([]);
 
+  // You can dynamically get the current user ID if needed
+  const currentUserId ='66e042a6d4152e85db6224ef'; 
+
+  // Fetch history for the current user
   const fetchHistory = async () => {
     try {
       const response = await getHistory();
-      setHistory(response.data);
+      const userHistory = response.data.filter(
+        (entry) => entry.user === currentUserId
+      );
+      setHistory(userHistory); // Set the filtered history
     } catch (error) {
       console.error('Failed to fetch history', error);
     }
@@ -16,7 +23,7 @@ const History = () => {
 
   useEffect(() => {
     fetchHistory();
-  }, []);
+  }, [currentUserId]);
 
   const handleDelete = async (id) => {
     try {
@@ -29,7 +36,8 @@ const History = () => {
 
   const handleClearAll = async () => {
     try {
-      await clearHistory();
+      // You should add an option to clear history for the current user only
+      await clearHistory(currentUserId);
       await fetchHistory(); // Re-fetch history after clearing all entries
     } catch (error) {
       console.error('Failed to clear history', error);
@@ -56,26 +64,30 @@ const History = () => {
             </button>
           </div>
           <ul className="space-y-4">
-            {history.map((entry) => (
-              <li
-                key={entry._id} // Ensure _id is passed correctly
-                className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 flex justify-between items-center"
-              >
-                <div className="text-lg font-semibold text-gray-900">
-                  {entry.text}
-                </div>
-                <div className="text-sm text-gray-600">{`→ ${entry.translatedText}`}</div>
-                <div className="text-xs text-gray-500 mt-2">{`${new Date(
-                  entry.createdAt
-                ).toLocaleString()}`}</div>
-                <button
-                  onClick={() => handleDelete(entry._id)} // Ensure _id is passed correctly
-                  className="ml-4 text-red-500 hover:text-red-700 focus:outline-none"
+            {history.length > 0 ? (
+              history.map((entry) => (
+                <li
+                  key={entry._id} // Ensure _id is passed correctly
+                  className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 flex justify-between items-center"
                 >
-                  Delete
-                </button>
-              </li>
-            ))}
+                  <div className="text-lg font-semibold text-gray-900">
+                    {entry.text}
+                  </div>
+                  <div className="text-sm text-gray-600">{`→ ${entry.translatedText}`}</div>
+                  <div className="text-xs text-gray-500 mt-2">{`${new Date(
+                    entry.createdAt
+                  ).toLocaleString()}`}</div>
+                  <button
+                    onClick={() => handleDelete(entry._id)} // Ensure _id is passed correctly
+                    className="ml-4 text-red-500 hover:text-red-700 focus:outline-none"
+                  >
+                    Delete
+                  </button>
+                </li>
+              ))
+            ) : (
+              <li className="text-gray-600">No history found for this user.</li>
+            )}
           </ul>
         </div>
       </div>

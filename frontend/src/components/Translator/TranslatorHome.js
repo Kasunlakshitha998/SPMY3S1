@@ -21,6 +21,8 @@ const TranslatorHome = ({ user }) => {
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('Text');
   const filter = new Filter();
+   const age = '10';
+  const userid = '66e042a6d4152e85db6224ef';
 
   // Function to handle translation
   const handleTranslateText = () => {
@@ -52,7 +54,7 @@ const TranslatorHome = ({ user }) => {
   const handleAddToFavorite = async () => {
     if (fromText && translatedText) {
       try {
-        await addFavorite(fromText, translatedText, user);
+        await addFavorite(fromText, translatedText, userid);
         alert('Added to favorites!');
       } catch (error) {
         console.error('Failed to add to favorites:', error);
@@ -67,10 +69,12 @@ const TranslatorHome = ({ user }) => {
   const handleTextChange = (e) => {
     const text = e.target.value;
     setFromText(text);
-    if (filter.isProfane(text)) {
-      setError('Inappropriate language detected.');
-    } else {
-      setError('');
+    if (age < 18) {
+      if (filter.isProfane(text)) {
+        setError('Inappropriate language detected.');
+      } else {
+        setError('');
+      }
     }
   };
 
