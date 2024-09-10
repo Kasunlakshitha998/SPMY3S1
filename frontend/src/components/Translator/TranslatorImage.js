@@ -150,7 +150,7 @@ const TranslatorImage = ({ fromLang, toLang, user }) => {
 
       <button
         onClick={handleSave}
-        className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-200 mt-4"
+        className="bg-green-500 text-white py-2 ml-10 px-4 rounded hover:bg-green-600 transition duration-200 mt-4"
       >
         Save
       </button>
