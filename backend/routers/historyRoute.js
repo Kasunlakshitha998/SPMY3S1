@@ -103,4 +103,16 @@ router.get('/get/:id', async (req, res) => {
   }
 });
 
+// Delete all history entries
+router.delete('/clear', async (req, res) => {
+  try {
+    const result = await History.deleteMany({});
+    res.status(200).json({ status: 'All history cleared', deletedCount: result.deletedCount });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ status: 'Error clearing history', error: err.message });
+  }
+});
+
+
 module.exports = router;

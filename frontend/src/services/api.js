@@ -10,7 +10,10 @@ const API = axios.create({
 export const getHistory = () => API.get('/history');
 export const addHistory = (text, translatedText, user) =>
   API.post('/history/add', { text, translatedText, user });
-
+export const deleteHistoryEntry = (id) => API.delete(`/history/delete/${id}`);
+export const clearHistory = async () => {
+  return API.delete('/history/clear');
+};
 
 // API calls for the Favorites feature
 export const getFavorites = () => API.get('/favorites/');
