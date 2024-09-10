@@ -1,5 +1,6 @@
 import React from 'react';
 import { addHistory } from '../../services/api';
+import Cookies from 'js-cookie';
 
 export const translateText = async (
   text,
@@ -35,7 +36,7 @@ export const translateText = async (
       const translatedText = data.responseData.translatedText;
       setTranslatedText(translatedText);
 
-      const currentUserId = '66e042a6d4152e85db6224ef';
+      const currentUserId = Cookies.get('userId');;
       
       if (text && translatedText) {
         try {

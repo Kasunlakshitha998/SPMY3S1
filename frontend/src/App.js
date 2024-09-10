@@ -7,9 +7,8 @@ import ImageList from './components/ImageList';
 import Register from './components/Auth/Register';
 import LoginNew from './components/Auth/loginNew';
 import ProtectedRoute from './components/Auth/ProtectedRoute'; // Import here
+import Profile from './components/Auth/profile';
 
-const clientId =
-  '112541839051-8mcghudktegcedp8c7o9prqvfrvgng27.apps.googleusercontent.com';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -48,7 +47,7 @@ const App = () => {
             path="/"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <TranslatorHome user={user} />
+                <TranslatorHome handleLogout={handleLogout} />
               </ProtectedRoute>
             }
           />
@@ -58,7 +57,7 @@ const App = () => {
             path="/favorites"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <Favorites user={user} />
+                <Favorites handleLogout={handleLogout} />
               </ProtectedRoute>
             }
           />
@@ -66,7 +65,7 @@ const App = () => {
             path="/history"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <History user={user} />
+                <History handleLogout={handleLogout} />
               </ProtectedRoute>
             }
           />
@@ -74,10 +73,11 @@ const App = () => {
             path="/imageTranslator"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <ImageList user={user} />
+                <ImageList handleLogout={handleLogout} />
               </ProtectedRoute>
             }
           />
+          <Route path="/profile" element={<Profile user={user} />} />
         </Routes>
       </div>
     </Router>

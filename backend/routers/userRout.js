@@ -2,15 +2,19 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-
 const router = express.Router();
+const cookieParser = require('cookie-parser');
+
+router.use(cookieParser());
+const dotenv = require('dotenv');
+dotenv.config();  
 
 // Register Route
 router.post('/register', async (req, res) => {
   const { name, email, age, password, confirmPassword } = req.body;
 
   // Validate fields
-  if (!name || !email || !password || !confirmPassword || age) {
+  if (!name || !email || !password || !confirmPassword || !age) {
     return res.status(400).json({ msg: 'Please enter all fields' });
   }
 
@@ -38,11 +42,6 @@ router.post('/register', async (req, res) => {
 
     await user.save();
 
-    const token = jwt.sign({ id: user._id }, 'secret', { expiresIn: 3600 });
-    res.json({
-      token,
-      user: { id: user._id, name: user.name, email: user.email, age: user.age },
-    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -50,36 +49,42 @@ router.post('/register', async (req, res) => {
 });
 
 // Login Route
-router.post('/login', async (req, res) => {
+router.route('/login').post((req, res) => {
   const { email, password } = req.body;
+  User.findOne({ email: email })
+    .then((user) => {
+      if (user) {
+        bcrypt.compare(password, user.password, (err, result) => {
+          if (err) {
+            res.json({ status: 'error', error: err.message });
+          } else {
+            if (result) {
+              const token = jwt.sign({ email: user.email }, 'jwt-secret-key', {
+                expiresIn: '1d',
+              });
+              // Set the token as a cookie
+              res.cookie('token', token, { httpOnly: true, maxAge: 86400000 }); // Max age set to 1 day in milliseconds
+              res.cookie('userEmail', user.email, { maxAge: 86400000 });
 
-  // Validate fields
-  if (!email || !password) {
-    return res.status(400).json({ msg: 'Please enter all fields' });
-  }
-
-  try {
-    // Check if user exists
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ msg: 'User does not exist' });
-    }
-
-    // Check password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ msg: 'Invalid credentials' });
-    }
-
-    const token = jwt.sign({ id: user._id }, 'secret', { expiresIn: 3600 });
-    res.json({
-      token,
-      user: { id: user._id, name: user.name, email: user.email, age: user.age },
+              // Send user ID along with other data
+              res.json({
+                status: 'success',
+                userId: user._id,
+                age : user.age,
+              });
+            } else {
+              res.status(401).json({ status: 'incorrect password' });
+            }
+          }
+        });
+      } else {
+        res.status(404).json({ status: 'no record existed' });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ status: 'error', error: err.message });
     });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
 });
+
 
 module.exports = router;

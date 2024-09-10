@@ -4,9 +4,9 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 import Sidebar from './Nav/Sidebar';
+import Cookies from 'js-cookie';
 
-
-const Favorites = () => {
+const Favorites = ({ handleLogout }) => {
   const [favorites, setFavorites] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,10 +14,9 @@ const Favorites = () => {
   const [itemsPerPage] = useState(6); //item count per page
   const [startDate, setStartDate] = useState(null); // State for DatePicker
   const [endDate, setEndDate] = useState(null); // State for DatePicker
-  
 
   // Fetch the current user ID when the component loads
-  const currentUserId = '66e042a6d4152e85db6224ef';
+  const currentUserId = Cookies.get('userId');
 
   // Fetch favorites from the API when the component loads
   useEffect(() => {
@@ -99,7 +98,7 @@ const Favorites = () => {
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <Sidebar />
+      <Sidebar handleLogout={handleLogout} />
 
       {/* Main Content */}
       <div className="flex-1 px-8 pt-3 bg-gray-100 overflow-auto ml-60">

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const LoginNew = ({ onLogin }) => {
   const [formData, setFormData] = useState({
@@ -21,6 +22,9 @@ const LoginNew = ({ onLogin }) => {
         formData
       );
       console.log(res.data);
+      Cookies.set('userEmail', email, { expires: 1 });
+      Cookies.set('userId', res.data.userId, { expires: 1 });
+      Cookies.set('age', res.data.age, { expires: 1 });
       onLogin(res.data);
       navigate('/');
     } catch (err) {
@@ -67,6 +71,11 @@ const LoginNew = ({ onLogin }) => {
               Login
             </button>
           </div>
+          <Link to="/register">
+            <button className="bg-white text-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors duration-300 w-full mt-4 border-2 border-indigo-600">
+              Register
+            </button>
+          </Link>
         </form>
       </div>
     </div>

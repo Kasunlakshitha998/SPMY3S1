@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ const Register = () => {
   });
 
   const { name, email, password, confirmPassword, age } = formData;
+  const navigate = useNavigate();
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -28,6 +30,7 @@ const Register = () => {
           formData
         );
         console.log(res.data);
+        navigate('/login');
       } catch (err) {
         console.error(err.response.data);
       }
@@ -127,13 +130,17 @@ const Register = () => {
             />
           </div>
           <div className="flex items-center justify-between mb-4">
-            <button
+            <input
               type="submit"
               className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors"
-            >
-              Register
-            </button>
+              value="Register"
+            />
           </div>
+          <Link to="/login">
+            <button className="bg-white text-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors duration-300 w-full mt-4 border-2 border-indigo-600">
+              Login
+            </button>
+          </Link>
         </form>
       </div>
     </div>

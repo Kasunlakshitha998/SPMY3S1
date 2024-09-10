@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { getHistory, deleteHistoryEntry, clearHistory } from '../services/api';
 import Sidebar from './Nav/Sidebar';
+import Cookies from 'js-cookie';
 
-const History = () => {
+const History = ({ handleLogout }) => {
   const [history, setHistory] = useState([]);
 
   // You can dynamically get the current user ID if needed
-  const currentUserId ='66e042a6d4152e85db6224ef'; 
+  const currentUserId = Cookies.get('userId');
 
   // Fetch history for the current user
   const fetchHistory = async () => {
@@ -47,7 +48,7 @@ const History = () => {
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <Sidebar />
+      <Sidebar handleLogout={handleLogout} />
 
       {/* Main Content */}
       <div className="flex-1 p-8 bg-gray-100 overflow-auto ml-48">

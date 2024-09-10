@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from './Nav/Sidebar';
+import Cookies from 'js-cookie';
 
-function ImageList() {
+function ImageList({ handleLogout }) {
   const [savedItems, setSavedItems] = useState([]);
 
-  const currentUserId = '66e042a6d4152e85db6224ef';
+  const currentUserId = Cookies.get('userId');
 
   // Fetch saved items
   useEffect(() => {
@@ -37,7 +38,7 @@ function ImageList() {
 
   return (
     <div className="flex h-screen">
-      <Sidebar />
+      <Sidebar handleLogout={handleLogout} />
 
       <div className="flex-1 p-8 bg-gray-100 overflow-auto ml-10">
         <div className="space-y-4 w-9/12 ml-60">

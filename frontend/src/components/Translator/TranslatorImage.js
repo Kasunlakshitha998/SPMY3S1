@@ -3,6 +3,7 @@ import Tesseract from 'tesseract.js';
 import { translateText } from './translateText';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const TranslatorImage = ({ fromLang, toLang, user }) => {
   const [imageBase64, setImageBase64] = useState('');
@@ -21,6 +22,7 @@ const TranslatorImage = ({ fromLang, toLang, user }) => {
       convertToBase64(file);
     }
   }, []);
+
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -73,7 +75,7 @@ const TranslatorImage = ({ fromLang, toLang, user }) => {
     );
   };
 
-  const currentUserId = '66e042a6d4152e85db6224ef'; 
+  const currentUserId = Cookies.get('userId');; 
 
   const handleSave = async () => {
     if (!imageBase64) {
