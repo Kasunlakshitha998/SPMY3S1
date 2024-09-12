@@ -17,25 +17,40 @@ const Register = () => {
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  const validateForm = () => {
     if (password !== confirmPassword) {
       alert('Passwords do not match');
-    } else if (age < 1) {
+      return false;
+    }
+    if (age < 1) {
       alert('Please enter a valid age');
-    } else {
-      try {
-        const res = await axios.post(
-          'http://localhost:5000/user/register',
-          formData
-        );
-        console.log(res.data);
-        navigate('/login');
-      } catch (err) {
-        console.error(err.response.data);
-      }
+      return false;
+    }
+    return true;
+  };
+
+  const handleRegister = async () => {
+    try {
+      const res = await axios.post(
+        'http://localhost:5000/user/register', // Correct API URL
+        formData
+      );
+      console.log('Response:', res.data);
+      alert('Register successful');
+      navigate('/login'); // Navigate to login on success
+    } catch (err) {
+      console.error('Error registering:', err.response?.data || err.message);
+      alert('Error during registration');
     }
   };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      await handleRegister();
+    }
+  };
+
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -130,11 +145,12 @@ const Register = () => {
             />
           </div>
           <div className="flex items-center justify-between mb-4">
-            <input
+            <button
               type="submit"
-              className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-colors"
-              value="Register"
-            />
+              className="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600 w-full"
+            >
+              Register
+            </button>
           </div>
           <Link to="/login">
             <button className="bg-white text-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 transition-colors duration-300 w-full mt-4 border-2 border-indigo-600">

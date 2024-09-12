@@ -163,6 +163,12 @@ const TranslatorHome = ({ user, handleLogout }) => {
                 ></textarea>
 
                 <div className="relative">
+                  <button
+                    onClick={handleAddToFavorite}
+                    className="absolute top-3 right-3 text-red-500 hover:text-red-600 transition duration-300"
+                  >
+                    <HeartIcon className="h-8 w-8" />
+                  </button>
                   <textarea
                     value={translatedText}
                     readOnly
@@ -171,7 +177,7 @@ const TranslatorHome = ({ user, handleLogout }) => {
                   ></textarea>
                   <button
                     onClick={copyToClipboard}
-                    className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 transition duration-300"
+                    className="absolute top-14 right-4 text-gray-600 hover:text-gray-800 transition duration-300"
                   >
                     <ClipboardIcon className="h-6 w-6" />
                   </button>
@@ -236,13 +242,13 @@ const TranslatorHome = ({ user, handleLogout }) => {
               )}
 
               {/* Add to Favorite Button */}
-              <button
+              {/* <button
                 onClick={handleAddToFavorite}
                 className="bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-lg flex items-center mt-4"
               >
                 <HeartIcon className="h-6 w-6 mr-2" />
                 Add to Favorites
-              </button>
+              </button> */}
             </div>
           )}
 

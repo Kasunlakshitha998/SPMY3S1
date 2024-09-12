@@ -36,7 +36,7 @@ const Favorites = ({ handleLogout }) => {
     if (currentUserId) {
       fetchFavorites();
     }
-  }, [currentUserId]); // Re-run this effect when the user ID is set
+  }, [currentUserId]);
 
   // Handle select and deselect of an individual item
   const handleSelectItem = (id) => {
