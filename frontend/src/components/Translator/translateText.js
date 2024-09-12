@@ -1,4 +1,3 @@
-import React from 'react';
 import { addHistory } from '../../services/api';
 import Cookies from 'js-cookie';
 

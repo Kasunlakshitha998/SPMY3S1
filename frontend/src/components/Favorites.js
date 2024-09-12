@@ -5,6 +5,10 @@ import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 import Sidebar from './Nav/Sidebar';
 import Cookies from 'js-cookie';
+import FavoriteEdite from './Translator/FavoriteEdite';
+import { PencilIcon } from '@heroicons/react/outline';
+
+
 
 const Favorites = ({ handleLogout }) => {
   const [favorites, setFavorites] = useState([]);
@@ -12,27 +16,28 @@ const Favorites = ({ handleLogout }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(6); //item count per page
-  const [startDate, setStartDate] = useState(null); // State for DatePicker
-  const [endDate, setEndDate] = useState(null); // State for DatePicker
-
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+  const [selectedFavorite, setSelectedFavorite] = useState(null);
   // Fetch the current user ID when the component loads
   const currentUserId = Cookies.get('userId');
 
   // Fetch favorites from the API when the component loads
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      try {
-        const response = await getFavorites();
-        // Filter favorites by the current user ID
-        const userFavorites = response.data.filter(
-          (fav) => fav.user === currentUserId
-        );
-        setFavorites(userFavorites);
-      } catch (error) {
-        console.error('Failed to fetch favorites:', error);
-      }
-    };
+  const fetchFavorites = async () => {
+    try {
+      const response = await getFavorites();
+      // Filter favorites by the current user ID
+      const userFavorites = response.data.filter(
+        (fav) => fav.user === currentUserId
+      );
+      setFavorites(userFavorites);
+    } catch (error) {
+      console.error('Failed to fetch favorites:', error);
+    }
+  };
 
+  useEffect(() => {
     if (currentUserId) {
       fetchFavorites();
     }
@@ -81,6 +86,17 @@ const Favorites = ({ handleLogout }) => {
 
     return matchesSearchTerm && matchesDateRange;
   });
+
+  const handleCardClick = (favorite) => {
+    setSelectedFavorite(favorite); // Set the clicked card's data
+    setIsPopUpOpen(true); // Open the popup
+  };
+
+  const handleClosePopup = () => {
+    setIsPopUpOpen(false); // Close the popup
+    setSelectedFavorite(null); // Clear the selected favorite
+    fetchFavorites();
+  };
 
   // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -165,9 +181,10 @@ const Favorites = ({ handleLogout }) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-4xl">
             {currentItems.map((fav) => (
               // Favorites card
+
               <div
                 key={fav._id}
-                className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 relative group border-l-8 border-yellow-500"
+                className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 relative group border-l-8 border-yellow-500 cursor-pointer"
               >
                 <input
                   type="checkbox"
@@ -176,7 +193,15 @@ const Favorites = ({ handleLogout }) => {
                   onChange={() => handleSelectItem(fav._id)}
                 />
 
-                <div className="flex flex-col space-y-2 p-2 m-2">
+                <PencilIcon
+                  className="absolute bottom-3 right-4 w-6 h-6 text-yellow-900"
+                  onClick={() => handleCardClick(fav)}
+                />
+
+                <div
+                  className="flex flex-col space-y-2 p-2 m-2"
+                  onClick={() => handleCardClick(fav)}
+                >
                   <span className="text-lg font-semibold text-gray-900">
                     {fav.text} -{' '}
                     <span className="text-gray-600">{fav.translatedText}</span>
@@ -189,6 +214,13 @@ const Favorites = ({ handleLogout }) => {
               </div>
             ))}
           </div>
+
+          {/* Popup Component */}
+          <FavoriteEdite
+            isOpen={isPopUpOpen}
+            onClose={handleClosePopup}
+            favorite={selectedFavorite}
+          />
 
           {/* Pagination Controls */}
           <div className="flex justify-center mt-8 space-x-2">
