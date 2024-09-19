@@ -1,14 +1,31 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { UserCircleIcon, LogoutIcon } from '@heroicons/react/outline'; // Importing icons
 
 const Sidebar = ({ handleLogout }) => {
   return (
     <>
-      <div className="bg-white shadow-md h-16 w-full fixed z-30">
-        
+      {/* Top Bar with Logout and Profile Icons */}
+      <div className="bg-white shadow-md h-16 w-full fixed z-30 flex items-center justify-end pr-4 space-x-4">
+        {/* Profile Icon */}
+        <div className="flex items-center space-x-2">
+          <UserCircleIcon className="h-8 w-8 text-gray-600" />
+          <span className="text-lg text-gray-600 font-semibold">Profile</span>
+        </div>
+
+        {/* Logout Button with Icon */}
+        <button
+          onClick={handleLogout}
+          className="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition duration-300"
+        >
+          <LogoutIcon className="h-6 w-6" />
+         
+        </button>
       </div>
+
+      {/* Sidebar */}
       <div className="flex h-screen bg-gray-100 fixed z-40">
-        {/* Sidebar */}
+        {/* Sidebar Content */}
         <div className="w-64 bg-white shadow-md">
           <div className="h-16 flex items-center justify-center border-b border-gray-200">
             <h1 className="text-2xl font-bold text-gray-800">Translator App</h1>
@@ -76,16 +93,6 @@ const Sidebar = ({ handleLogout }) => {
                 </NavLink>
               </li>
             </ul>
-
-            {/* Logout Button */}
-            <div className="mt-52 ml-10">
-              <button
-                onClick={handleLogout}
-                className="flex items-center justify-center px-6 py-3 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition duration-300"
-              >
-                <span className="text-lg">Logout</span>
-              </button>
-            </div>
           </nav>
         </div>
       </div>

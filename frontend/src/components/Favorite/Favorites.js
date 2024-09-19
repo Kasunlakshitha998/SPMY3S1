@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { getFavorites, deleteFavorite } from '../services/api';
+import { getFavorites, deleteFavorite } from '../../services/api';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
-import Sidebar from './Nav/Sidebar';
+import Sidebar from '../Nav/Sidebar';
 import Cookies from 'js-cookie';
-import FavoriteEdite from './Translator/FavoriteEdite';
+import FavoriteEdite from './FavoriteEdite';
 import { PencilIcon } from '@heroicons/react/outline';
-
+import FavoriteReport from './FavoriteReport';
+import { SearchIcon, CalendarIcon, FilterIcon } from '@heroicons/react/outline';
 
 
 const Favorites = ({ handleLogout }) => {
@@ -19,7 +20,10 @@ const Favorites = ({ handleLogout }) => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+  const [isPopUpOpenReport, setIsPopUpOpenReport] = useState(false);
   const [selectedFavorite, setSelectedFavorite] = useState(null);
+  const [showFilters, setShowFilters] = useState(false);
+  
   // Fetch the current user ID when the component loads
   const currentUserId = Cookies.get('userId');
 
@@ -92,7 +96,12 @@ const Favorites = ({ handleLogout }) => {
     setIsPopUpOpen(true); // Open the popup
   };
 
+  const handleReport = () => {
+    setIsPopUpOpenReport(true); // Open the popup
+  };
+
   const handleClosePopup = () => {
+    setIsPopUpOpenReport(false);
     setIsPopUpOpen(false); // Close the popup
     setSelectedFavorite(null); // Clear the selected favorite
     fetchFavorites();
@@ -117,60 +126,87 @@ const Favorites = ({ handleLogout }) => {
       <Sidebar handleLogout={handleLogout} />
 
       {/* Main Content */}
-      <div className="flex-1 px-8 pt-3 bg-gray-100 overflow-auto ml-60">
+      <div className="flex-1 px-8 pt-3 bg-gray-100 overflow-auto ml-60 mt-16">
         <div className="min-h-60 bg-gray-100 text-black p-4 ml-10">
           <h2 className="text-3xl font-bold mb-2 text-center">
             Manage Favorites
           </h2>
 
-          {/* Search Bar */}
-          <input
-            type="text"
-            placeholder="Search favorites..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="p-3 mb-4 border ml-28 border-gray-300 rounded-lg w-10/12 text-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
-          />
-
-          {/* Date Picker Filter */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-4 ml-16">
-            <div>
-              <label className="block text-sm font-bold mb-2">Start Date</label>
-              <DatePicker
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                className="p-2 border border-gray-300 rounded-md w-full"
-                isClearable
-                placeholderText="Select start date"
+          {/* Combined Search Bar and Filter Icon */}
+          <div className="flex items-center justify-between mb-4 space-x-4 ml-16">
+            {/* Search Bar with Icon */}
+            <div className="relative w-5/12">
+              <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
+              <input
+                type="text"
+                placeholder="Search favorites..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 p-2 border border-gray-300 rounded-lg w-full text-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-bold mb-2">End Date</label>
-              <DatePicker
-                selected={endDate}
-                onChange={(date) => setEndDate(date)}
-                className="p-2 border border-gray-300 rounded-md w-full"
-                isClearable
-                placeholderText="Select end date"
-              />
-            </div>
+            {/* Filter Button with Icon */}
+            <button
+              onClick={() => setShowFilters(!showFilters)} // Toggle filter visibility
+              className="flex items-center px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            >
+              <FilterIcon className="w-5 h-5 mr-2 text-gray-600" />
+              <span className="text-md text-gray-700">Filter</span>
+            </button>
           </div>
+
+          {/* Date Picker Filter (Visible when 'showFilters' is true) */}
+          {showFilters && (
+            <div className="flex items-center space-x-4 mb-4 ml-16">
+              {/* Start Date */}
+              <div className="relative w-2/12">
+                <CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  className="pl-10 p-2 border border-gray-300 rounded-lg w-full text-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
+                  isClearable
+                  placeholderText="Start date"
+                />
+              </div>
+
+              {/* End Date */}
+              <div className="relative w-2/12">
+                <CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  className="pl-10 p-2 border border-gray-300 rounded-lg w-full text-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
+                  isClearable
+                  placeholderText="End date"
+                />
+              </div>
+            </div>
+          )}
 
           {/* Select All and Delete Selected Buttons */}
           <div className="flex items-center justify-between mb-4">
             <button
               onClick={handleSelectAll}
-              className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-transform transform hover:scale-105"
+              className="p-2 px-4  bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-transform transform hover:scale-105"
             >
               {selectedItems.length === currentItems.length
                 ? 'Deselect All'
                 : 'Select All'}
             </button>
+
+            <button
+              onClick={handleReport}
+              className="p-2 px-4 left-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-transform transform hover:scale-105"
+            >
+              Report
+            </button>
+
             {selectedItems.length > 0 && (
               <button
                 onClick={handleDeleteSelected}
-                className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition-transform transform hover:scale-105"
+                className="p-2 px-4  bg-red-500 text-white rounded-lg hover:bg-red-700 transition-transform transform hover:scale-105"
               >
                 Delete Selected ({selectedItems.length})
               </button>
@@ -220,6 +256,12 @@ const Favorites = ({ handleLogout }) => {
             isOpen={isPopUpOpen}
             onClose={handleClosePopup}
             favorite={selectedFavorite}
+          />
+
+          <FavoriteReport
+            isOpen={isPopUpOpenReport}
+            onClose={handleClosePopup}
+            favorite={favorites}
           />
 
           {/* Pagination Controls */}

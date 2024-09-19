@@ -6,7 +6,7 @@ import {
   SwitchHorizontalIcon,
   SpeakerphoneIcon,
 } from '@heroicons/react/outline';
-import { translateText } from './translateText';
+import { translateText } from '../Translator/translateText';
 import Cookies from 'js-cookie';
 import { Filter } from 'bad-words';
 import { updateFavorite } from '../../services/api';

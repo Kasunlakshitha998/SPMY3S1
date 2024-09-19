@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Favorites from './components/Favorites';
+import Favorites from './components/Favorite/Favorites';
 import History from './components/History';
 import TranslatorHome from './components/Translator/TranslatorHome';
 import ImageList from './components/ImageList';

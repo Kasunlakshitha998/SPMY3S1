@@ -51,7 +51,7 @@ const History = ({ handleLogout }) => {
       <Sidebar handleLogout={handleLogout} />
 
       {/* Main Content */}
-      <div className="flex-1 p-8 bg-gray-100 overflow-auto ml-48">
+      <div className="flex-1 p-8 bg-gray-100 overflow-auto ml-48 mt-16">
         <div className="container mx-auto p-4 bg-gray-100 min-h-screen ml-24 w-5/6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold text-gray-800">
