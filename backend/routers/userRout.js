@@ -40,7 +40,10 @@ router.post('/register', async (req, res) => {
       password: hashedPassword,
     });
 
-    await user.save();
+    await user
+      .save()
+      .then(() => res.json('User Added'))
+      .catch((err) => res.status(400).json('Error: ' + err));
 
   } catch (err) {
     console.error(err.message);

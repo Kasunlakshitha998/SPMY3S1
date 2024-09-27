@@ -40,7 +40,7 @@ function ImageList({ handleLogout }) {
     <div className="flex h-screen">
       <Sidebar handleLogout={handleLogout} />
 
-      <div className="flex-1 p-8 bg-gray-100 overflow-auto ml-10">
+      <div className="flex-1 p-8 bg-gray-100 overflow-auto ml-10 mt-16">
         <div className="space-y-4 w-9/12 ml-60">
           {savedItems.map((item) => (
             <div

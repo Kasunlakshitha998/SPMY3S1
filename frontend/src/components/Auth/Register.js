@@ -36,8 +36,10 @@ const Register = () => {
         formData
       );
       console.log('Response:', res.data);
+      
       alert('Register successful');
-      navigate('/login'); // Navigate to login on success
+      navigate('/login');
+       // Navigate to login on success
     } catch (err) {
       console.error('Error registering:', err.response?.data || err.message);
       alert('Error during registration');

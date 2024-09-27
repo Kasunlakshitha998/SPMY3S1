@@ -232,7 +232,7 @@ const TranslatorHome = ({ user, handleLogout }) => {
                 className={`w-full py-3 rounded-lg text-white font-semibold ${
                   loading ? 'bg-gray-500' : 'bg-blue-600 hover:bg-blue-700'
                 } transition duration-300`}
-                disabled={loading}
+                disabled={loading || error}
               >
                 {loading ? 'Translating...' : 'Translate Text'}
               </button>
