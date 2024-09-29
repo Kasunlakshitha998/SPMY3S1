@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { translateText } from './translateText';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-
+import { voicetranslateText } from './VoicetranslateText';
 import TranslatorImage from './TranslatorImage';
 import { addFavorite } from '../../services/api';
 import { Filter } from 'bad-words';
@@ -14,7 +12,7 @@ import {
 } from '@heroicons/react/solid';
 import Sidebar from '../Nav/Sidebar';
 
-const TranslatorHome = ({ user }) => {
+const VoiceHome = ({ user }) => {
   const [fromText, setFromText] = useState('');
   const [translatedText, setTranslatedText] = useState('');
   const [fromLang, setFromLang] = useState('en');
@@ -23,13 +21,10 @@ const TranslatorHome = ({ user }) => {
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('Text');
   const filter = new Filter();
-  const navigate = useNavigate(); // Initialize navigate function
-
-  
 
   // Function to handle translation
   const handleTranslateText = () => {
-    translateText(
+    voicetranslateText(
       fromText,
       fromLang,
       toLang,
@@ -78,9 +73,6 @@ const TranslatorHome = ({ user }) => {
       setError('');
     }
   };
-  const handleVoice = () => {
-    navigate('/VoiceHome');
-  };
 
   // Function for Text-to-Speech
   const handleTextToSpeech = () => {
@@ -98,11 +90,6 @@ const handleSpeechToText = () => {
     setError('Speech Recognition is not supported in this browser.');
     return;
   }
-
-    // Function to navigate to VvoiceTranslation
-    const handleVoice = () => {
-      navigate('/VoiceHome');
-    };
 
   const recognition = new SpeechRecognition();
   recognition.lang = fromLang; // Set the language for speech recognition
@@ -190,7 +177,12 @@ const handleSpeechToText = () => {
 
               {/* Language Dropdowns */}
               <div className="flex items-center justify-between gap-4">
-             
+                <button
+                  className="text-gray-600 hover:text-gray-800 transition duration-300"
+                  onClick={handleSpeechToText}
+                >
+                  <MicrophoneIcon className="h-6 w-6" />
+                </button>
 
                 <select
                   value={fromLang}
@@ -217,7 +209,12 @@ const handleSpeechToText = () => {
                   <option value="en">English</option>
                 </select>
 
-         
+                <button
+                  className="text-gray-600 hover:text-gray-800 transition duration-300"
+                  onClick={handleTextToSpeech}
+                >
+                  <SpeakerphoneIcon className="h-6 w-6" />
+                </button>
               </div>
 
               {/* Translate Button */}
@@ -229,13 +226,6 @@ const handleSpeechToText = () => {
                 disabled={loading}
               >
                 {loading ? 'Translating...' : 'Translate Text'}
-              </button>
-                   {/* New Navigation Button for Voice Translation */}
-                   <button
-                onClick={handleVoice}
-                className="w-full py-3 mt-4 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition duration-300"
-              >
-                Voice Translation
               </button>
 
               {error && (
@@ -269,4 +259,4 @@ const handleSpeechToText = () => {
   );
 };
 
-export default TranslatorHome;
+export default VoiceHome;
