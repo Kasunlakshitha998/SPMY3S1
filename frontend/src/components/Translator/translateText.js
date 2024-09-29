@@ -1,5 +1,5 @@
-import React from 'react';
 import { addHistory } from '../../services/api';
+import Cookies from 'js-cookie';
 
 export const translateText = async (
   text,
@@ -8,7 +8,6 @@ export const translateText = async (
   setLoading,
   setError,
   setTranslatedText,
-  user
 ) => {
   if (!text.trim() || !fromLang || !toLang) {
     setError('Please enter text and select both languages.');
@@ -36,9 +35,11 @@ export const translateText = async (
       const translatedText = data.responseData.translatedText;
       setTranslatedText(translatedText);
 
+      const currentUserId = Cookies.get('userId');;
+      
       if (text && translatedText) {
         try {
-          await addHistory(text, translatedText, user);
+          await addHistory(text, translatedText, currentUserId);
           alert('Translation added to history!');
         } catch (error) {
           console.error('Failed to add to History:', error);

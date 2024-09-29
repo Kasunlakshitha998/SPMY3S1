@@ -11,8 +11,9 @@ import {
   HeartIcon,
 } from '@heroicons/react/solid';
 import Sidebar from '../Nav/Sidebar';
+import Cookies from 'js-cookie';
 
-const TranslatorHome = ({ user }) => {
+const TranslatorHome = ({ user, handleLogout }) => {
   const [fromText, setFromText] = useState('');
   const [translatedText, setTranslatedText] = useState('');
   const [fromLang, setFromLang] = useState('en');
@@ -21,6 +22,8 @@ const TranslatorHome = ({ user }) => {
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('Text');
   const filter = new Filter();
+  const age = Cookies.get('age');
+  const userid = Cookies.get('userId');
 
   // Function to handle translation
   const handleTranslateText = () => {
@@ -52,7 +55,7 @@ const TranslatorHome = ({ user }) => {
   const handleAddToFavorite = async () => {
     if (fromText && translatedText) {
       try {
-        await addFavorite(fromText, translatedText, user);
+        await addFavorite(fromText, translatedText, userid);
         alert('Added to favorites!');
       } catch (error) {
         console.error('Failed to add to favorites:', error);
@@ -67,10 +70,12 @@ const TranslatorHome = ({ user }) => {
   const handleTextChange = (e) => {
     const text = e.target.value;
     setFromText(text);
-    if (filter.isProfane(text)) {
-      setError('Inappropriate language detected.');
-    } else {
-      setError('');
+    if (age < 18) {
+      if (filter.isProfane(text)) {
+        setError('Inappropriate language detected.');
+      } else {
+        setError('');
+      }
     }
   };
 
@@ -82,44 +87,42 @@ const TranslatorHome = ({ user }) => {
   };
 
   // Function for Speech-to-Text
-const handleSpeechToText = () => {
-  const SpeechRecognition =
-    window.SpeechRecognition || window.webkitSpeechRecognition;
+  const handleSpeechToText = () => {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
 
-  if (!SpeechRecognition) {
-    setError('Speech Recognition is not supported in this browser.');
-    return;
-  }
+    if (!SpeechRecognition) {
+      setError('Speech Recognition is not supported in this browser.');
+      return;
+    }
 
-  const recognition = new SpeechRecognition();
-  recognition.lang = fromLang; // Set the language for speech recognition
-  recognition.interimResults = false;
+    const recognition = new SpeechRecognition();
+    recognition.lang = fromLang; // Set the language for speech recognition
+    recognition.interimResults = false;
 
-  recognition.onstart = () => {
-    console.log('Speech recognition started');
-    setLoading(true);
+    recognition.onstart = () => {
+      console.log('Speech recognition started');
+      setLoading(true);
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setFromText(transcript);
+      setLoading(false);
+    };
+
+    recognition.onerror = (event) => {
+      setError(`Error occurred in recognition: ${event.error}`);
+      setLoading(false);
+    };
+
+    recognition.start();
   };
-
-  recognition.onresult = (event) => {
-    const transcript = event.results[0][0].transcript;
-    setFromText(transcript);
-    setLoading(false);
-  };
-
-  recognition.onerror = (event) => {
-    setError(`Error occurred in recognition: ${event.error}`);
-    setLoading(false);
-  };
-
-  recognition.start();
-};
-
-
 
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <Sidebar />
+      <Sidebar handleLogout={handleLogout} />
 
       {/* Main Content */}
       <div className="flex-1 p-8 bg-gray-100 overflow-auto">
@@ -160,6 +163,12 @@ const handleSpeechToText = () => {
                 ></textarea>
 
                 <div className="relative">
+                  <button
+                    onClick={handleAddToFavorite}
+                    className="absolute top-3 right-3 text-red-500 hover:text-red-600 transition duration-300"
+                  >
+                    <HeartIcon className="h-8 w-8" />
+                  </button>
                   <textarea
                     value={translatedText}
                     readOnly
@@ -168,7 +177,7 @@ const handleSpeechToText = () => {
                   ></textarea>
                   <button
                     onClick={copyToClipboard}
-                    className="absolute top-3 right-3 text-gray-600 hover:text-gray-800 transition duration-300"
+                    className="absolute top-14 right-4 text-gray-600 hover:text-gray-800 transition duration-300"
                   >
                     <ClipboardIcon className="h-6 w-6" />
                   </button>
@@ -223,7 +232,7 @@ const handleSpeechToText = () => {
                 className={`w-full py-3 rounded-lg text-white font-semibold ${
                   loading ? 'bg-gray-500' : 'bg-blue-600 hover:bg-blue-700'
                 } transition duration-300`}
-                disabled={loading}
+                disabled={loading || error}
               >
                 {loading ? 'Translating...' : 'Translate Text'}
               </button>
@@ -233,13 +242,13 @@ const handleSpeechToText = () => {
               )}
 
               {/* Add to Favorite Button */}
-              <button
+              {/* <button
                 onClick={handleAddToFavorite}
-                className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg flex items-center mt-4"
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-lg flex items-center mt-4"
               >
                 <HeartIcon className="h-6 w-6 mr-2" />
                 Add to Favorites
-              </button>
+              </button> */}
             </div>
           )}
 
