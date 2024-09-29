@@ -20,5 +20,3 @@ export const getFavorites = () => API.get('/favorites/');
 export const addFavorite = (text, translatedText, user) =>
   API.post('/favorites/add', { text, translatedText, user });
 export const deleteFavorite = (id) => API.delete(`/favorites/delete/${id}`);
-export const updateFavorite = (text, translatedText, id) =>
-  API.put(`/favorites/update/${id}`, { text, translatedText });

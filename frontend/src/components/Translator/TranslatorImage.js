@@ -3,7 +3,6 @@ import Tesseract from 'tesseract.js';
 import { translateText } from './translateText';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 
 const TranslatorImage = ({ fromLang, toLang, user }) => {
   const [imageBase64, setImageBase64] = useState('');
@@ -22,7 +21,6 @@ const TranslatorImage = ({ fromLang, toLang, user }) => {
       convertToBase64(file);
     }
   }, []);
-
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -75,8 +73,6 @@ const TranslatorImage = ({ fromLang, toLang, user }) => {
     );
   };
 
-  const currentUserId = Cookies.get('userId');; 
-
   const handleSave = async () => {
     if (!imageBase64) {
       setError('No image selected.');
@@ -84,13 +80,16 @@ const TranslatorImage = ({ fromLang, toLang, user }) => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/imageSave/add', {
-        user: currentUserId, // Pass user info as needed
-        image: imageBase64,
-        originalText: fromText,
-        translatedText: translatedText,
-        createdAt: new Date(),
-      });
+      const response = await axios.post(
+        'http://localhost:5000/imageSave/add',
+        {
+          user: user, // Pass user info as needed
+          image: imageBase64,
+          originalText: fromText,
+          translatedText: translatedText,
+          createdAt: new Date(),
+        }
+      );
       console.log(response.data);
       navigate('/imageTranslator');
     } catch (err) {

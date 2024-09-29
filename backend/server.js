@@ -46,9 +46,6 @@ app.use('/history', historyRoutes);
 const imageRoutes = require('./routers/imageRouter');
 app.use('/imageSave', imageRoutes);
 
-const userRoutes = require('./routers/userRout');
-app.use('/user', userRoutes);
-
 
 // Add a base route to confirm server is running
 app.get('/', (req, res) => {
