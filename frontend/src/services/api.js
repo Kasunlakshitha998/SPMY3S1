@@ -23,6 +23,10 @@ export const deletevoiceHistoryEntry = (id) => API.delete(`/voicehistory/delete/
 export const clearvoiceHistory = async () => {
   return API.delete('/voicehistory/clear');
 };
+// Add this update function
+export const updatevoiceHistoryEntry = (id, updatedData) => {
+  return API.put(`/voicehistory/update/${id}`, updatedData);
+};
 
 // API calls for the Favorites feature
 export const getFavorites = () => API.get('/favorites/');

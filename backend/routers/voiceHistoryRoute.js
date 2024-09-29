@@ -35,10 +35,10 @@ router.get('/', (req, res) => {
 router.put('/update/:id', async (req, res) => {
   try {
     const historyId = req.params.id;
-    const { originalText, translatedText } = req.body;
+    const { text, translatedText } = req.body; // Changed from originalText to text
 
     const updateHistory = {
-      originalText,
+      text,
       translatedText,
     };
 
@@ -62,6 +62,8 @@ router.put('/update/:id', async (req, res) => {
       .json({ status: 'Error with updating data', error: error.message });
   }
 });
+
+
 
 // Delete a history entry by ID
 router.delete('/delete/:id', async (req, res) => {
