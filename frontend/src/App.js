@@ -6,7 +6,7 @@ import TranslatorHome from './components/Translator/TranslatorHome';
 import ImageList from './components/ImageList';
 import Register from './components/Auth/Register';
 import LoginNew from './components/Auth/loginNew';
-import ProtectedRoute from './components/Auth/ProtectedRoute'; // Import here
+import ProtectedRoute from './components/Auth/ProtectedRoute';
 import Profile from './components/Auth/profile';
 
 
