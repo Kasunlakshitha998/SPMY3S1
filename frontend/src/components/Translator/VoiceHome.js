@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { voicetranslateText } from './VoicetranslateText';
+import { voicetranslateText2 } from './VoicetranslateText2';
 import TranslatorImage from './TranslatorImage';
 import { addFavorite } from '../../services/api';
 import { Filter } from 'bad-words';
@@ -25,6 +26,19 @@ const VoiceHome = ({ user }) => {
   // Function to handle translation
   const handleTranslateText = () => {
     voicetranslateText(
+      fromText,
+      fromLang,
+      toLang,
+      setLoading,
+      setError,
+      setTranslatedText,
+      user
+    );
+  };
+
+   // Function to handle translation
+   const handleTranslateText2 = () => {
+    voicetranslateText2(
       fromText,
       fromLang,
       toLang,
@@ -219,13 +233,23 @@ const handleSpeechToText = () => {
 
               {/* Translate Button */}
               <button
-                onClick={handleTranslateText}
+                onClick={handleTranslateText2}
                 className={`w-full py-3 rounded-lg text-white font-semibold ${
                   loading ? 'bg-gray-500' : 'bg-blue-600 hover:bg-blue-700'
                 } transition duration-300`}
                 disabled={loading}
               >
                 {loading ? 'Translating...' : 'Translate Text'}
+              </button>
+
+              <button
+                onClick={handleTranslateText}
+                className={`w-full py-3 rounded-lg text-white font-semibold ${
+                  loading ? 'bg-blue-600' : 'bg-blue-600 hover:bg-blue-700'
+                } transition duration-300`}
+                disabled={loading}
+              >
+                save
               </button>
 
               {error && (
