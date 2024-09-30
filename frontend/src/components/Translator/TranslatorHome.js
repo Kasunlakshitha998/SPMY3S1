@@ -27,8 +27,6 @@ const TranslatorHome = ({ user }) => {
   const filter = new Filter();
   const navigate = useNavigate(); // Initialize navigate function
 
-  
-
   const location = useLocation();
   const initialStateText = location.state?.initialText || '';
   const [text, setText] = useState(initialStateText);
