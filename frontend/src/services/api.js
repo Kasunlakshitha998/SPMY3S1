@@ -30,10 +30,21 @@ export const getBookmarks = async (userId) => {
 };
 
 
+// translation voicehistory
+export const getvoiceHistory = () => API.get('/voicehistory');
+export const addvoiceHistory = (text, translatedText, user) =>
+  API.post('/voicehistory/add', { text, translatedText, user });
+export const deletevoiceHistoryEntry = (id) => API.delete(`/voicehistory/delete/${id}`);
+export const clearvoiceHistory = async () => {
+  return API.delete('/voicehistory/clear');
+};
+// Add this update function
+export const updatevoiceHistoryEntry = (id, updatedData) => {
+  return API.put(`/voicehistory/update/${id}`, updatedData);
+};
+
 // API calls for the Favorites feature
 export const getFavorites = () => API.get('/favorites/');
 export const addFavorite = (text, translatedText, user) =>
   API.post('/favorites/add', { text, translatedText, user });
 export const deleteFavorite = (id) => API.delete(`/favorites/delete/${id}`);
-export const updateFavorite = (text, translatedText, id) =>
-  API.put(`/favorites/update/${id}`, { text, translatedText });

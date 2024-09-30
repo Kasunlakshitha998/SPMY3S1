@@ -1,7 +1,7 @@
 import React from 'react';
-import { addHistory } from '../../services/api';
+import { addvoiceHistory } from '../../services/api';
 
-export const translateText = async (
+export const voicetranslateText = async (
   text,
   fromLang,
   toLang,
@@ -38,17 +38,17 @@ export const translateText = async (
 
       if (text && translatedText) {
         try {
-          await addHistory(text, translatedText, user);
-          alert('Translation added to history!');
+          await addvoiceHistory(text, translatedText, user);
+          alert('Translation added to voice history!');
         } catch (error) {
-          console.error('Failed to add to History:', error);
-          alert('Failed to add to History. Please try again.');
+          console.error('Failed to add to voice History:', error);
+          alert('Failed to add to voice History. Please try again.');
         }
       }
     }
   } catch (error) {
-    console.error('Error fetching translation:', error);
-    setError('An error occurred while fetching the translation.');
+    console.error('Error fetching voice translation:', error);
+    setError('An error occurred while fetching the voice translation.');
   } finally {
     setLoading(false);
   }
