@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const History = require('../models/history');
+const Bookmark = require('../models/bookmark');
 
 // Add new history entry
 router.post('/add', (req, res) => {
@@ -114,5 +115,36 @@ router.delete('/clear', async (req, res) => {
   }
 });
 
+// Save bookmark
+router.post('/bookmarks', async (req, res) => {
+  const { userId, entryId, color } = req.body;
+  try {
+    // Check if the bookmark already exists for this user and entry
+    const existingBookmark = await Bookmark.findOne({ userId, entryId });
+    if (existingBookmark) {
+      // If it exists, update it instead of creating a new one
+      existingBookmark.color = color;
+      await existingBookmark.save();
+      return res.status(200).json({ message: 'Bookmark updated!' });
+    }
+
+    // Otherwise, create a new bookmark
+    const bookmark = new Bookmark({ userId, entryId, color });
+    await bookmark.save();
+    res.status(201).json({ message: 'Bookmark saved!' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to save bookmark', error });
+  }
+});
+
+// Fetch bookmarks for a user
+router.get('/bookmarks/:userId', async (req, res) => {
+  try {
+    const bookmarks = await Bookmark.find({ userId: req.params.userId });
+    res.status(200).json(bookmarks);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch bookmarks', error });
+  }
+});
 
 module.exports = router;

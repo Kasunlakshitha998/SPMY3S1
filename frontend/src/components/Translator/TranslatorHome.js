@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { translateText } from './translateText';
 import TranslatorImage from './TranslatorImage';
 import { addFavorite } from '../../services/api';
@@ -12,6 +12,7 @@ import {
 } from '@heroicons/react/solid';
 import Sidebar from '../Nav/Sidebar';
 import Cookies from 'js-cookie';
+import { useLocation } from 'react-router-dom';
 
 const TranslatorHome = ({ user, handleLogout }) => {
   const [fromText, setFromText] = useState('');
@@ -24,6 +25,16 @@ const TranslatorHome = ({ user, handleLogout }) => {
   const filter = new Filter();
   const age = Cookies.get('age');
   const userid = Cookies.get('userId');
+
+  const location = useLocation();
+  const initialStateText = location.state?.initialText || '';
+  const [text, setText] = useState(initialStateText);
+
+  useEffect(() => {
+    if (initialStateText) {
+      setFromText(initialStateText); // Set fromText when initialStateText is passed
+    }
+  }, [initialStateText]);
 
   // Function to handle translation
   const handleTranslateText = () => {
@@ -130,21 +141,19 @@ const TranslatorHome = ({ user, handleLogout }) => {
           {/* Tab Selection */}
           <div className="flex border-b border-gray-300 mb-6">
             <button
-              className={`flex-1 py-3 text-lg font-semibold ${
-                activeTab === 'Text'
-                  ? 'border-b-2 border-blue-500 text-blue-500'
-                  : 'text-gray-500'
-              }`}
+              className={`flex-1 py-3 text-lg font-semibold ${activeTab === 'Text'
+                ? 'border-b-2 border-blue-500 text-blue-500'
+                : 'text-gray-500'
+                }`}
               onClick={() => setActiveTab('Text')}
             >
               Text
             </button>
             <button
-              className={`flex-1 py-3 text-lg font-semibold ${
-                activeTab === 'Image'
-                  ? 'border-b-2 border-blue-500 text-blue-500'
-                  : 'text-gray-500'
-              }`}
+              className={`flex-1 py-3 text-lg font-semibold ${activeTab === 'Image'
+                ? 'border-b-2 border-blue-500 text-blue-500'
+                : 'text-gray-500'
+                }`}
               onClick={() => setActiveTab('Image')}
             >
               Image
@@ -229,9 +238,8 @@ const TranslatorHome = ({ user, handleLogout }) => {
               {/* Translate Button */}
               <button
                 onClick={handleTranslateText}
-                className={`w-full py-3 rounded-lg text-white font-semibold ${
-                  loading ? 'bg-gray-500' : 'bg-blue-600 hover:bg-blue-700'
-                } transition duration-300`}
+                className={`w-full py-3 rounded-lg text-white font-semibold ${loading ? 'bg-gray-500' : 'bg-blue-600 hover:bg-blue-700'
+                  } transition duration-300`}
                 disabled={loading}
               >
                 {loading ? 'Translating...' : 'Translate Text'}
@@ -269,3 +277,32 @@ const TranslatorHome = ({ user, handleLogout }) => {
 };
 
 export default TranslatorHome;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
