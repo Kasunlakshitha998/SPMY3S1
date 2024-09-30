@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import { voicetranslateText } from './VoicetranslateText';
+import { voicetranslateText2 } from './VoicetranslateText2';
 import { translateText } from './translateText';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-
 import TranslatorImage from './TranslatorImage';
 import { addFavorite } from '../../services/api';
 import { Filter } from 'bad-words';
@@ -23,15 +23,13 @@ const TranslatorHome = ({ user, handleLogout }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('Text');
-  const navigate = useNavigate(); // Initialize navigate function
-
   const filter = new Filter();
   const age = Cookies.get('age');
   const userid = Cookies.get('userId');
 
   // Function to handle translation
   const handleTranslateText = () => {
-    translateText(
+    voicetranslateText(
       fromText,
       fromLang,
       toLang,
@@ -41,6 +39,19 @@ const TranslatorHome = ({ user, handleLogout }) => {
       user
     );
   };
+
+     // Function to handle translation
+     const handleTranslateText2 = () => {
+      translateText(
+        fromText,
+        fromLang,
+        toLang,
+        setLoading,
+        setError,
+        setTranslatedText,
+        user
+      );
+    };
 
   // Function to swap languages
   const handleLanguageSwap = () => {
@@ -55,10 +66,7 @@ const TranslatorHome = ({ user, handleLogout }) => {
     alert('Copied to clipboard!');
   };
 
-      // Function to navigate to VvoiceTranslation
-      const handleVoice = () => {
-        navigate('/VoiceHome');
-      };
+
 
   // Function to add translation to favorites
   const handleAddToFavorite = async () => {
@@ -195,7 +203,12 @@ const TranslatorHome = ({ user, handleLogout }) => {
 
               {/* Language Dropdowns */}
               <div className="flex items-center justify-between gap-4">
-          
+                <button
+                  className="text-gray-600 hover:text-gray-800 transition duration-300"
+                  onClick={handleSpeechToText}
+                >
+                  <MicrophoneIcon className="h-6 w-6" />
+                </button>
 
                 <select
                   value={fromLang}
@@ -222,25 +235,35 @@ const TranslatorHome = ({ user, handleLogout }) => {
                   <option value="en">English</option>
                 </select>
 
-         
+                <button
+                  className="text-gray-600 hover:text-gray-800 transition duration-300"
+                  onClick={handleTextToSpeech}
+                >
+                  <SpeakerphoneIcon className="h-6 w-6" />
+                </button>
               </div>
 
-              {/* Translate Button */}
-              <button
-                onClick={handleTranslateText}
+             {/* Translate Button */}
+             <button
+                onClick={handleTranslateText2}
                 className={`w-full py-3 rounded-lg text-white font-semibold ${
                   loading ? 'bg-gray-500' : 'bg-blue-600 hover:bg-blue-700'
                 } transition duration-300`}
-                disabled={loading || error}
+                disabled={loading}
               >
                 {loading ? 'Translating...' : 'Translate Text'}
               </button>
+
               <button
-                onClick={handleVoice}
-                className="w-full py-3 mt-4 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition duration-300"
+                onClick={handleTranslateText}
+                className={`w-full py-3 rounded-lg text-white font-semibold ${
+                  loading ? 'bg-blue-600' : 'bg-blue-600 hover:bg-blue-700'
+                } transition duration-300`}
+                disabled={loading}
               >
-                Voice Translation
+                save
               </button>
+          
 
               {error && (
                 <p className="text-red-500 text-center mt-2">{error}</p>

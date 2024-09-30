@@ -8,6 +8,8 @@ import Register from './components/Auth/Register';
 import LoginNew from './components/Auth/loginNew';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import Profile from './components/Auth/profile';
+import VoiceHome from './components/Translator/VoiceHome';
+import VoiceHistory from './components/VoiceHistory';
 
 
 const App = () => {
@@ -78,6 +80,8 @@ const App = () => {
             }
           />
           <Route path="/profile" element={<Profile user={user} />} />
+          <Route path="/voicehome" element={<VoiceHome />} />
+          <Route path="/voicehistory" element={<VoiceHistory />} />
         </Routes>
       </div>
     </Router>

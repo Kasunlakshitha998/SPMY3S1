@@ -22,3 +22,31 @@ export const addFavorite = (text, translatedText, user) =>
 export const deleteFavorite = (id) => API.delete(`/favorites/delete/${id}`);
 export const updateFavorite = (text, translatedText, id) =>
   API.put(`/favorites/update/${id}`, { text, translatedText });
+// Save Bookmark
+export const saveBookmark = async ({ userId, entryId, color }) => {
+  const response = await API.post(`/bookmarks`, { // Change '/bookmark' to '/bookmarks'
+    userId,
+    entryId,
+    color,
+  });
+  return response.data;
+};
+// Get Bookmarks for a user
+export const getBookmarks = async (userId) => {
+  const response = await axios.get(`${API}/bookmarks/${userId}`);
+  return response.data;
+};
+
+
+// translation voicehistory
+export const getvoiceHistory = () => API.get('/voicehistory');
+export const addvoiceHistory = (text, translatedText, user) =>
+  API.post('/voicehistory/add', { text, translatedText, user });
+export const deletevoiceHistoryEntry = (id) => API.delete(`/voicehistory/delete/${id}`);
+export const clearvoiceHistory = async () => {
+  return API.delete('/voicehistory/clear');
+};
+// Add this update function
+export const updatevoiceHistoryEntry = (id, updatedData) => {
+  return API.put(`/voicehistory/update/${id}`, updatedData);
+};
