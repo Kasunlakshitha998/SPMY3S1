@@ -24,7 +24,9 @@
     "react-icon": "^1.0.0",
     "react-router-dom": "^6.26.1",
     "react-scripts": "5.0.1",
+    "react-toastify": "^10.0.5",
     "recharts": "^2.12.7",
+    "sonner": "^1.5.0",
     "tesseract.js": "^5.1.1",
     "web-vitals": "^2.1.4"
   },

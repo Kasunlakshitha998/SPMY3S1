@@ -9,7 +9,8 @@ import FavoriteEdite from './FavoriteEdite';
 import { PencilIcon } from '@heroicons/react/outline';
 import FavoriteReport from './FavoriteReport';
 import { SearchIcon, CalendarIcon, FilterIcon } from '@heroicons/react/outline';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Favorites = ({ handleLogout }) => {
   const [favorites, setFavorites] = useState([]);
@@ -38,6 +39,10 @@ const Favorites = ({ handleLogout }) => {
       setFavorites(userFavorites);
     } catch (error) {
       console.error('Failed to fetch favorites:', error);
+      toast.error('Error geting favorites!', {
+        position: 'top-right',
+        autoClose: 3000, // Auto close after 3 seconds
+      });
     }
   };
 
@@ -72,6 +77,10 @@ const Favorites = ({ handleLogout }) => {
       await Promise.all(selectedItems.map((id) => deleteFavorite(id)));
       setFavorites(favorites.filter((fav) => !selectedItems.includes(fav._id)));
       setSelectedItems([]);
+      toast.success('Delete favorites successfully!', {
+        position: 'top-right',
+        autoClose: 2000,
+      });
     } catch (error) {
       console.error('Failed to delete selected items:', error);
       alert('Failed to delete selected items. Please try again.');
@@ -79,17 +88,24 @@ const Favorites = ({ handleLogout }) => {
   };
 
   // Handle search filtering
-  const filteredFavorites = favorites.filter((fav) => {
-    const matchesSearchTerm = fav.text
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
+ const filteredFavorites = favorites.filter((fav) => {
+   const matchesSearchTerm1 = fav.text
+     .toLowerCase()
+     .includes(searchTerm.toLowerCase());
 
-    const matchesDateRange =
-      (!startDate || new Date(fav.createdAt) >= startDate) &&
-      (!endDate || new Date(fav.createdAt) <= endDate);
+   const matchesSearchTerm2 = fav.translatedText
+     .toLowerCase()
+     .includes(searchTerm.toLowerCase());
 
-    return matchesSearchTerm && matchesDateRange;
-  });
+   const matchesSearchTerm = matchesSearchTerm1 || matchesSearchTerm2; // Match either text or translated text
+
+   const matchesDateRange =
+     (!startDate || new Date(fav.createdAt) >= startDate) &&
+     (!endDate || new Date(fav.createdAt) <= endDate);
+
+   return matchesSearchTerm && matchesDateRange; // Both search and date range must match
+ });
+
 
   const handleCardClick = (favorite) => {
     setSelectedFavorite(favorite); // Set the clicked card's data
@@ -282,6 +298,8 @@ const Favorites = ({ handleLogout }) => {
           </div>
         </div>
       </div>
+
+      <ToastContainer />
     </div>
   );
 };

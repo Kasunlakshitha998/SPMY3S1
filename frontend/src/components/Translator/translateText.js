@@ -1,5 +1,7 @@
 import { addHistory } from '../../services/api';
 import Cookies from 'js-cookie';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const translateText = async (
   text,
@@ -40,10 +42,16 @@ export const translateText = async (
       if (text && translatedText) {
         try {
           await addHistory(text, translatedText, currentUserId);
-          alert('Translation added to history!');
+          toast.success('Translation added to history!', {
+            position: 'top-right',
+            autoClose: 3000, // Auto close after 3 seconds
+          });
         } catch (error) {
           console.error('Failed to add to History:', error);
-          alert('Failed to add to History. Please try again.');
+          toast.error('Failed to add to History. Please try again.', {
+            position: 'top-right',
+            autoClose: 3000, // Auto close after 3 seconds
+          });
         }
       }
     }

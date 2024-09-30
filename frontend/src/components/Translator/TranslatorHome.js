@@ -12,6 +12,9 @@ import {
 } from '@heroicons/react/solid';
 import Sidebar from '../Nav/Sidebar';
 import Cookies from 'js-cookie';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const TranslatorHome = ({ user, handleLogout }) => {
   const [fromText, setFromText] = useState('');
@@ -48,21 +51,32 @@ const TranslatorHome = ({ user, handleLogout }) => {
   // Function to copy translated text to clipboard
   const copyToClipboard = () => {
     navigator.clipboard.writeText(translatedText);
-    alert('Copied to clipboard!');
+    toast.success('Copied to clipboard!', {
+      position: 'top-right',
+      autoClose: 3000, // Auto close after 3 seconds
+    });
   };
 
+  
   // Function to add translation to favorites
   const handleAddToFavorite = async () => {
     if (fromText && translatedText) {
       try {
         await addFavorite(fromText, translatedText, userid);
-        alert('Added to favorites!');
+        toast.success('Added to favorites successfully!', {
+          position: 'top-right',
+          autoClose: 3000, // Auto close after 3 seconds
+        });
       } catch (error) {
         console.error('Failed to add to favorites:', error);
-        alert('Failed to add to favorites. Please try again.');
+        toast.error('Failed to add to favorites. Please try again.', {
+          position: 'top-right',
+        });
       }
     } else {
-      alert('Please translate the text before adding to favorites.');
+      toast.warn('Please translate the text before adding to favorites.', {
+        position: 'top-right',
+      });
     }
   };
 
@@ -264,6 +278,7 @@ const TranslatorHome = ({ user, handleLogout }) => {
           )}
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

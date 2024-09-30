@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from './Nav/Sidebar';
 import Cookies from 'js-cookie';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function ImageList({ handleLogout }) {
   const [savedItems, setSavedItems] = useState([]);
@@ -31,6 +34,11 @@ function ImageList({ handleLogout }) {
       await axios.delete(`http://localhost:5000/imageSave/delete/${id}`); // Adjust URL to match your backend route
       // Update the state after deleting an item by filtering it out of the savedItems
       setSavedItems(savedItems.filter((item) => item._id !== id));
+
+      toast.success('Delete successfully!', {
+        position: 'top-right',
+        autoClose: 3000, // Auto close after 3 seconds
+      });
     } catch (err) {
       console.error('Failed to delete item', err);
     }
@@ -72,6 +80,8 @@ function ImageList({ handleLogout }) {
           ))}
         </div>
       </div>
+
+      <ToastContainer />
     </div>
   );
 }

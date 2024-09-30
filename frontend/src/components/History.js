@@ -4,6 +4,8 @@ import Sidebar from './Nav/Sidebar';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import { TrashIcon } from '@heroicons/react/solid';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const History = ({ handleLogout }) => {
   const [history, setHistory] = useState([]);
@@ -48,6 +50,11 @@ const History = ({ handleLogout }) => {
   const handleDelete = async (id) => {
     try {
       await deleteHistoryEntry(id);
+
+      toast.success('Delete successfully!', {
+        position: 'top-right',
+        autoClose: 3000, // Auto close after 3 seconds
+      });
       await fetchHistory();
     } catch (error) {
       console.error('Failed to delete entry', error);
@@ -57,6 +64,10 @@ const History = ({ handleLogout }) => {
   const handleClearAll = async () => {
     try {
       await clearHistory(currentUserId);
+      toast.success('Clear All History successfully!', {
+        position: 'top-right',
+        autoClose: 3000, // Auto close after 3 seconds
+      });
       await fetchHistory();
     } catch (error) {
       console.error('Failed to clear history', error);
@@ -178,6 +189,7 @@ const History = ({ handleLogout }) => {
           </ul>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
