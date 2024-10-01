@@ -22,6 +22,7 @@ router.post('/add', (req, res) => {
 // Get all favorites
 router.get('/', (req, res) => {
   Favorite.find()
+    .sort({ createdAt: -1 }) // Sort by 'createdAt' descending
     .then((favorites) => {
       res.json(favorites);
     })
@@ -30,6 +31,7 @@ router.get('/', (req, res) => {
       res.status(500).json('Error: ' + err);
     });
 });
+
 
 // Update a favorite
 router.put('/update/:id', async (req, res) => {
