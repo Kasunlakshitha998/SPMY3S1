@@ -1,7 +1,7 @@
 import React from 'react';
-import { addvoiceHistory } from '../../services/api';
+import { addHistory } from '../../services/api';
 
-export const voicetranslateText = async (
+export const voicetranslateText2 = async (
   text,
   fromLang,
   toLang,
@@ -38,8 +38,8 @@ export const voicetranslateText = async (
 
       if (text && translatedText) {
         try {
-          await addvoiceHistory(text, translatedText, user);
-          alert('Translation saved!');
+          await addHistory(text, translatedText, user);
+          alert('Translation added to  history!');
         } catch (error) {
           console.error('Failed to add to voice History:', error);
           alert('Failed to add to voice History. Please try again.');
