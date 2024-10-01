@@ -125,76 +125,45 @@ const History = ({ handleLogout }) => {
   });
 
   const generatePDFReport = () => {
-    const pdf = new jsPDF('p', 'pt', 'a4');
-    const title = "History Report";
-    const headers = [["Created At", "Text", "Translated Text"]];
-
-    const data = categorizedHistory.map((entry) => [
-      new Date(entry.createdAt).toLocaleString(),
-      entry.text,
-      entry.translatedText,
-    ]);
-
-    pdf.setFontSize(20);
-    pdf.text(title, pdf.internal.pageSize.getWidth() / 2, 40, { align: "center" });
-    pdf.setLineWidth(0.5);
-    pdf.line(30, 50, pdf.internal.pageSize.getWidth() - 30, 50);
-
+    const pdf = new jsPDF();
+    pdf.text('History Report (All)', 20, 20);
     pdf.autoTable({
-      head: headers,
-      body: data,
-      startY: 60,
-      theme: 'grid',
-      headStyles: { fillColor: [60, 179, 113], textColor: [255, 255, 255] },
-      styles: {
-        cellPadding: 5,
-        fontSize: 10,
-        overflow: 'linebreak',
-        lineHeight: 1.5,
-      },
-      columnStyles: {
-        0: { cellWidth: 'auto' },
-        1: { cellWidth: 'auto' },
-        2: { cellWidth: 'auto' },
-      },
-      margin: { top: 50 },
+      head: [['Created At', 'Text', 'Translated Text']],
+      body: history.map((entry) => [
+        new Date(entry.createdAt).toLocaleString(),
+        entry.text,
+        entry.translatedText,
+      ]),
     });
-
-    pdf.save('history_report.pdf');
+    pdf.save('history_report_all.pdf');
   };
-
+  
   const handleGenerateWeeklyReport = (weekSelection) => {
     const currentDate = new Date();
-    const currentDay = currentDate.getDay(); // Get current day (0-6, where 0 is Sunday)
-
+    const currentDay = currentDate.getDay();
     let startOfWeek, endOfWeek;
 
-    if (weekSelection === "0") { // Current Week
-      // Calculate start of the week (Monday)
+    if (weekSelection === '0') {
       startOfWeek = new Date(currentDate);
-      startOfWeek.setDate(currentDate.getDate() - (currentDay + 6)); // Monday of the current week
-
-      // Calculate end of the week (Sunday)
-      endOfWeek = new Date(currentDate);
-      endOfWeek.setDate(currentDate.getDate() - currentDay); // Sunday of the current week
-    } else if (weekSelection === "1") { // Last Week
-      // Calculate start of the week (Monday) of last week
+      startOfWeek.setDate(currentDate.getDate() - currentDay);
+      endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
+    } else if (weekSelection === '1') {
       startOfWeek = new Date(currentDate);
-      startOfWeek.setDate(currentDate.getDate() - (currentDay + 13)); // Monday of the last week
-
-      // Calculate end of the week (Sunday) of last week
-      endOfWeek = new Date(currentDate);
-      endOfWeek.setDate(currentDate.getDate() - (currentDay + 7)); // Sunday of the last week
+      startOfWeek.setDate(currentDate.getDate() - currentDay - 7);
+      endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
     }
 
-    const weeklyEntries = categorizedHistory.filter((entry) => {
+    // Filter the full history for the selected week
+    const weeklyEntries = history.filter((entry) => {
       const entryDate = new Date(entry.createdAt);
       return entryDate >= startOfWeek && entryDate <= endOfWeek;
     });
 
     if (weeklyEntries.length > 0) {
       const pdf = new jsPDF();
-      pdf.text('Weekly Report', 20, 20);
+      pdf.text('Weekly Report (All)', 20, 20);
       pdf.autoTable({
         head: [['Created At', 'Text', 'Translated Text']],
         body: weeklyEntries.map((entry) => [
@@ -203,21 +172,24 @@ const History = ({ handleLogout }) => {
           entry.translatedText,
         ]),
       });
-      pdf.save('weekly_report.pdf');
+      pdf.save('weekly_report_all.pdf');
     } else {
       alert('No entries found for the selected week.');
     }
   };
 
-  const handleGenerateMonthlyReport = (year, month) => {
-    const monthlyEntries = categorizedHistory.filter((entry) => {
+  const handleGenerateMonthlyReport = (month) => {
+    const currentYear = new Date().getFullYear();
+
+    // Filter the full history for the selected month
+    const monthlyEntries = history.filter((entry) => {
       const entryDate = new Date(entry.createdAt);
-      return entryDate.getFullYear() === year && entryDate.getMonth() === month;
+      return entryDate.getFullYear() === currentYear && entryDate.getMonth() === parseInt(month);
     });
 
     if (monthlyEntries.length > 0) {
       const pdf = new jsPDF();
-      pdf.text(`Monthly Report for ${month + 1}/${year}`, 20, 20); // month is 0-indexed
+      pdf.text(`Monthly Report for ${month + 1}/${currentYear} (All)`, 20, 20);
       pdf.autoTable({
         head: [['Created At', 'Text', 'Translated Text']],
         body: monthlyEntries.map((entry) => [
@@ -226,18 +198,19 @@ const History = ({ handleLogout }) => {
           entry.translatedText,
         ]),
       });
-      pdf.save('monthly_report.pdf');
+      pdf.save('monthly_report_all.pdf');
     } else {
-      alert('No entries found for the selected month and year.');
+      alert('No entries found for the selected month.');
     }
   };
 
   const handleGenerateCategoryReport = (category) => {
-    const categoryEntries = categorizedHistory.filter((entry) => bookmarks[entry._id] === category);
+    // Filter the full history for the selected category
+    const categoryEntries = history.filter((entry) => bookmarks[entry._id] === category);
 
     if (categoryEntries.length > 0) {
       const pdf = new jsPDF();
-      pdf.text(`Report for ${category.charAt(0).toUpperCase() + category.slice(1)} Category`, 20, 20);
+      pdf.text(`Report for ${category.charAt(0).toUpperCase() + category.slice(1)} Category (All)`, 20, 20);
       pdf.autoTable({
         head: [['Created At', 'Text', 'Translated Text']],
         body: categoryEntries.map((entry) => [
@@ -246,7 +219,7 @@ const History = ({ handleLogout }) => {
           entry.translatedText,
         ]),
       });
-      pdf.save(`${category}_report.pdf`);
+      pdf.save(`${category}_report_all.pdf`);
     } else {
       alert(`No entries found for the ${category} category.`);
     }
