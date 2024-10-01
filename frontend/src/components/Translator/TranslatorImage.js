@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
-const TranslatorImage = ({ fromLang, toLang, user }) => {
+const TranslatorImage = ({ fromLang, toLang }) => {
   const [imageBase64, setImageBase64] = useState('');
   const [fromText, setFromText] = useState('');
   const [translatedText, setTranslatedText] = useState('');
@@ -71,7 +71,6 @@ const TranslatorImage = ({ fromLang, toLang, user }) => {
       setLoading,
       setError,
       setTranslatedText,
-      user
     );
   };
 

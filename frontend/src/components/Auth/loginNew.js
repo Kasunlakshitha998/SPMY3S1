@@ -22,13 +22,14 @@ const LoginNew = ({ onLogin }) => {
     setLoading(true);
     try {
       const res = await axios.post(
-        'http://localhost:5000/user/login',
+        'http://localhost:5050/user/login',
         formData
       );
       console.log(res.data);
       Cookies.set('userEmail', email, { expires: 1 });
       Cookies.set('userId', res.data.userId, { expires: 1 });
       Cookies.set('age', res.data.age, { expires: 1 });
+      Cookies.set('paid', res.data.isPaid, { expires: 1 });
       onLogin(res.data);
       navigate('/');
     } catch (err) {

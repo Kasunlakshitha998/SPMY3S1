@@ -32,7 +32,7 @@ const Register = () => {
   const handleRegister = async () => {
     try {
       const res = await axios.post(
-        'http://localhost:5000/user/register', // Correct API URL
+        'http://localhost:5050/user/register', // Correct API URL
         formData
       );
       console.log('Response:', res.data);

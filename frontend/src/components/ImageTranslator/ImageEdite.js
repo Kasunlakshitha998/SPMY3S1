@@ -101,7 +101,7 @@ const handleUpdate = async () => {
 
   try {
     const response = await axios.put(
-      `http://localhost:5000/imageSave/update/${item._id}`,
+      `http://localhost:5050/imageSave/update/${item._id}`,
       {
         user: currentUserId,
         image: imageBase64,

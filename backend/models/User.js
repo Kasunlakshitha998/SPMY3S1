@@ -18,6 +18,11 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  isPaid: {
+    type: String,
+    required: true,
+    default : 'no',
+  },
 });
 
 module.exports = mongoose.model('User', UserSchema);

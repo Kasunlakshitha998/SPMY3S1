@@ -1,11 +1,39 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { UserCircleIcon, LogoutIcon } from '@heroicons/react/outline'; // Importing icons
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Sidebar = ({ handleLogout }) => {
+  const paid = Cookies.get('paid');
+  const navigate = useNavigate();
+  const userId = Cookies.get('userId');
+  
+
+  const handleUnsubscribe = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:5050/user/updatePaymentStatus/${userId}`,
+        { userId, isPaid: 'no' }
+      );
+
+      if (response.status === 200) {
+        alert('You have successfully unsubscribed.');
+        navigate('/login');
+      } else {
+        alert('Unsubscription failed.');
+      }
+    } catch (error) {
+      console.error('Error during unsubscription:', error);
+      alert('There was an error processing your unsubscription.');
+    }
+  };
+
   return (
     <>
       {/* Top Bar with Logout and Profile Icons */}
+      {/* Top Bar with Logout, Profile Icons, and Get Pro Button */}
       <div className="bg-white shadow-md h-16 w-full fixed z-30 flex items-center justify-end pr-4 space-x-4">
         {/* Profile Icon */}
         <div className="flex items-center space-x-2">
@@ -13,13 +41,31 @@ const Sidebar = ({ handleLogout }) => {
           <span className="text-lg text-gray-600 font-semibold">Profile</span>
         </div>
 
+        {/* Conditionally Render Get Pro Button if not paid */}
+        {paid === 'no' && (
+          <button
+            onClick={() => navigate('/get-pro')}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300"
+          >
+            <span>Get Pro</span>
+          </button>
+        )}
+
+        {paid === 'yes' && (
+          <button
+            onClick={handleUnsubscribe}
+            className="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition duration-300"
+          >
+            <span>Unsubscribe</span>
+          </button>
+        )}
+
         {/* Logout Button with Icon */}
         <button
           onClick={handleLogout}
           className="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition duration-300"
         >
           <LogoutIcon className="h-6 w-6" />
-         
         </button>
       </div>
 
@@ -93,19 +139,17 @@ const Sidebar = ({ handleLogout }) => {
                 </NavLink>
               </li>
 
-
-                     {/* History Link Voice */}
-             <li className="mb-6">
-              <NavLink
-                to="/voicehistory"
-                activeClassName="bg-blue-500 text-white"
-                className="flex items-center px-6 py-3 hover:bg-blue-500 hover:text-white text-gray-800 transition-colors duration-200"
-              >
-                <span className="text-xl mr-4">🎤</span>
-                <span className="text-lg">Voice History</span>
-              </NavLink>
-            </li>
-
+              {/* History Link Voice */}
+              <li className="mb-6">
+                <NavLink
+                  to="/voicehistory"
+                  activeClassName="bg-blue-500 text-white"
+                  className="flex items-center px-6 py-3 hover:bg-blue-500 hover:text-white text-gray-800 transition-colors duration-200"
+                >
+                  <span className="text-xl mr-4">🎤</span>
+                  <span className="text-lg">Voice History</span>
+                </NavLink>
+              </li>
             </ul>
           </nav>
         </div>

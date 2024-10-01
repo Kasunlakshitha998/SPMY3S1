@@ -9,6 +9,7 @@ import LoginNew from './components/Auth/loginNew';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import Profile from './components/Auth/profile';
 import VoiceHistory from './components/VoiceHistory';
+import GetProPage from './components/Translator/pro/GetProPage';
 
 
 const App = () => {
@@ -75,6 +76,14 @@ const App = () => {
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <ImageList handleLogout={handleLogout} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/get-pro"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <GetProPage handleLogout={handleLogout} />
               </ProtectedRoute>
             }
           />

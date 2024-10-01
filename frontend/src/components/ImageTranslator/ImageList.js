@@ -25,7 +25,7 @@ function ImageList({ handleLogout }) {
 
   const fetchSavedItems = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/imageSave/');
+      const response = await axios.get('http://localhost:5050/imageSave/');
       const saveItem = response.data.filter(
         (entry) => entry.user === currentUserId
       );

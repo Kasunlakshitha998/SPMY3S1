@@ -15,8 +15,9 @@ import Cookies from 'js-cookie';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useLocation } from 'react-router-dom';
+import { translateTextPro } from './pro/translateTextPro';
 
-const TranslatorHome = ({ user, handleLogout }) => {
+const TranslatorHome = ({ handleLogout }) => {
   const [fromText, setFromText] = useState('');
   const [translatedText, setTranslatedText] = useState('');
   const [fromLang, setFromLang] = useState('en');
@@ -27,6 +28,8 @@ const TranslatorHome = ({ user, handleLogout }) => {
   const filter = new Filter();
   const age = Cookies.get('age');
   const userid = Cookies.get('userId');
+  const paid = Cookies.get('paid');
+  console.log(paid);
 
   const location = useLocation();
   const initialStateText = location.state?.initialText || '';
@@ -39,15 +42,30 @@ const TranslatorHome = ({ user, handleLogout }) => {
 
   // Function to handle translation
   const handleTranslateText = () => {
-    translateText(
-      fromText,
-      fromLang,
-      toLang,
-      setLoading,
-      setError,
-      setTranslatedText,
-      user
-    );
+
+    if (paid == 'no') {
+      translateText(
+        fromText,
+        fromLang,
+        toLang,
+        setLoading,
+        setError,
+        setTranslatedText,
+      );
+    }
+
+    if (paid == 'yes') {
+      translateTextPro(
+        fromText,
+        fromLang,
+        toLang,
+        setLoading,
+        setError,
+        setTranslatedText,
+      );
+    }
+
+    
   };
 
   // Function to swap languages
@@ -280,7 +298,6 @@ const TranslatorHome = ({ user, handleLogout }) => {
               <TranslatorImage
                 fromLang={fromLang}
                 toLang={toLang}
-                user={user}
               />
             </div>
           )}

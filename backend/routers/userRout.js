@@ -73,7 +73,8 @@ router.route('/login').post((req, res) => {
               res.json({
                 status: 'success',
                 userId: user._id,
-                age : user.age,
+                age: user.age,
+                isPaid: user.isPaid,
               });
             } else {
               res.status(401).json({ status: 'incorrect password' });
@@ -89,5 +90,24 @@ router.route('/login').post((req, res) => {
     });
 });
 
+// Update payment status route
+router.post('/updatePaymentStatus/:userId', async (req, res) => {
+  const { userId } = req.params; // Extract userId from the request params
+  const { isPaid } = req.body; // Extract isPaid from the request body
+
+  try {
+    // Find user by userId and update isPaid to 'yes'
+    const updatedUser = await User.findByIdAndUpdate(userId, { isPaid }, { new: true });
+
+    if (updatedUser) {
+      res.status(200).json({ message: 'Payment status updated successfully.', user: updatedUser });
+    } else {
+      res.status(404).json({ message: 'User not found.' });
+    }
+  } catch (error) {
+    console.error('Error updating payment status:', error);
+    res.status(500).json({ message: 'Error updating payment status.', error });
+  }
+});
 
 module.exports = router;
