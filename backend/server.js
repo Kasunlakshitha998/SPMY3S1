@@ -49,6 +49,9 @@ app.use('/imageSave', imageRoutes);
 const userRoutes = require('./routers/userRout');
 app.use('/user', userRoutes);
 
+const ivoiceHistoryRoutes = require('./routers/voiceHistoryRoute');
+app.use('/voiceHistory', ivoiceHistoryRoutes);
+
 
 // Add a base route to confirm server is running
 app.get('/', (req, res) => {

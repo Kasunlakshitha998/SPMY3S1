@@ -38,3 +38,17 @@ export const getBookmarks = async (userId) => {
   const response = await axios.get(`${API}/bookmarks/${userId}`);
   return response.data;
 };
+
+
+// translation voicehistory
+export const getvoiceHistory = () => API.get('/voicehistory');
+export const addvoiceHistory = (text, translatedText, user) =>
+  API.post('/voicehistory/add', { text, translatedText, user });
+export const deletevoiceHistoryEntry = (id) => API.delete(`/voicehistory/delete/${id}`);
+export const clearvoiceHistory = async () => {
+  return API.delete('/voicehistory/clear');
+};
+// Add this update function
+export const updatevoiceHistoryEntry = (id, updatedData) => {
+  return API.put(`/voicehistory/update/${id}`, updatedData);
+};
