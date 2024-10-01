@@ -64,7 +64,6 @@ const TranslatorHome = ({ handleLogout }) => {
         setTranslatedText,
       );
     }
-
     
   };
 

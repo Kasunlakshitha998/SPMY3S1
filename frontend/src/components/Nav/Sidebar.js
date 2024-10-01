@@ -120,7 +120,7 @@ const Sidebar = ({ handleLogout }) => {
                   }
                 >
                   <span className="text-xl mr-4">📜</span>
-                  <span className="text-lg">History</span>
+                  <span className="text-lg">Text / Image History</span>
                 </NavLink>
               </li>
 
