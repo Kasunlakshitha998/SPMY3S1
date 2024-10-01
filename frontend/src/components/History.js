@@ -15,7 +15,6 @@ const History = ({ handleLogout }) => {
   const navigate = useNavigate();
 
   const currentUserId = Cookies.get('userId');
-  const userid = Cookies.get('userId');
   const colors = ['red', 'blue', 'green', 'yellow', 'purple']; // Available bookmark colors
 
   // Mapping of color classes for Tailwind CSS

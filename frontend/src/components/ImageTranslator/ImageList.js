@@ -1,30 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Sidebar from './Nav/Sidebar';
+import Sidebar from '../Nav/Sidebar';
 import Cookies from 'js-cookie';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import ImageEdite from './ImageEdite';
 
 function ImageList({ handleLogout }) {
   const [savedItems, setSavedItems] = useState([]);
-
+  const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const currentUserId = Cookies.get('userId');
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const handleCardClick = (item) => {
+    setSelectedItem(item); // Set the clicked card's data
+    setIsPopUpOpen(true); // Open the popup
+  };
+
+  const handleClosePopup = () => {
+    setIsPopUpOpen(false); // Close the popup
+    fetchSavedItems();
+    setSelectedItem(null);
+  };
+
+  const fetchSavedItems = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/imageSave/');
+      const saveItem = response.data.filter(
+        (entry) => entry.user === currentUserId
+      );
+      setSavedItems(saveItem);
+    } catch (err) {
+      console.error('Failed to fetch saved items', err);
+    }
+  };
 
   // Fetch saved items
   useEffect(() => {
-    const fetchSavedItems = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/imageSave/');
-        const saveItem = response.data.filter(
-          (entry) => entry.user === currentUserId
-        );
-        setSavedItems(saveItem);
-      } catch (err) {
-        console.error('Failed to fetch saved items', err);
-      }
-    };
-
     fetchSavedItems();
   }, []);
 
@@ -70,16 +82,30 @@ function ImageList({ handleLogout }) {
                 <p className="font-bold">Translated Text:</p>
                 <p>{item.translatedText}</p>
               </div>
-              <button
-                onClick={() => handleDelete(item._id)}
-                className="mt-4 text-red-500 hover:text-red-700"
-              >
-                Delete
-              </button>
+              <div className="flex space-x-4 right-0">
+                <button
+                  onClick={() => handleCardClick(item)}
+                  className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(item._id)}
+                  className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition duration-300"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))}
         </div>
       </div>
+
+      <ImageEdite
+        isOpen={isPopUpOpen}
+        onClose={handleClosePopup}
+        item={selectedItem}
+      />
 
       <ToastContainer />
     </div>

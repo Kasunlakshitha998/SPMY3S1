@@ -3,12 +3,11 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Favorites from './components/Favorite/Favorites';
 import History from './components/History';
 import TranslatorHome from './components/Translator/TranslatorHome';
-import ImageList from './components/ImageList';
+import ImageList from './components/ImageTranslator/ImageList';
 import Register from './components/Auth/Register';
 import LoginNew from './components/Auth/loginNew';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import Profile from './components/Auth/profile';
-import VoiceHome from './components/Translator/VoiceHome';
 import VoiceHistory from './components/VoiceHistory';
 
 
@@ -80,7 +79,6 @@ const App = () => {
             }
           />
           <Route path="/profile" element={<Profile user={user} />} />
-          <Route path="/voicehome" element={<VoiceHome />} />
           <Route path="/voicehistory" element={<VoiceHistory />} />
         </Routes>
       </div>
