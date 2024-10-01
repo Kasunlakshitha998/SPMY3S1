@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { XIcon } from '@heroicons/react/outline';
+import { translateTextPro } from '../Translator/pro/translateTextPro';
 
 const ImageEdite = ({ user, isOpen, onClose, item }) => {
   const [imageBase64, setImageBase64] = useState(item?.image || '');
@@ -13,7 +14,6 @@ const ImageEdite = ({ user, isOpen, onClose, item }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isDragOver, setIsDragOver] = useState(false);
-  const navigate = useNavigate();
   const [fromLang, setFromLang] = useState(item?.fromLang || 'en');
   const [toLang, setToLang] = useState(item?.toLang || 'si');
 
@@ -78,17 +78,29 @@ const ImageEdite = ({ user, isOpen, onClose, item }) => {
         setLoading(false);
       });
   };
-
+const paid = Cookies.get('paid');
   const handleTranslateImageText = () => {
-    translateText(
-      fromText,
-      fromLang,
-      toLang,
-      setLoading,
-      setError,
-      setTranslatedText,
-      user
-    );
+    if (paid == 'no') {
+      translateText(
+        fromText,
+        fromLang,
+        toLang,
+        setLoading,
+        setError,
+        setTranslatedText
+      );
+    }
+
+    if (paid == 'yes') {
+      translateTextPro(
+        fromText,
+        fromLang,
+        toLang,
+        setLoading,
+        setError,
+        setTranslatedText
+      );
+    }
   };
 
   const currentUserId = Cookies.get('userId');

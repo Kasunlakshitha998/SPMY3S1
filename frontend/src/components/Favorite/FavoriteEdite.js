@@ -10,8 +10,9 @@ import { translateText } from '../Translator/translateText';
 import Cookies from 'js-cookie';
 import { Filter } from 'bad-words';
 import { updateFavorite } from '../../services/api';
+import { translateTextPro } from '../Translator/pro/translateTextPro';
 
-const TranslateEdite = ({isOpen, onClose, favorite}) => {
+const TranslateEdite = ({ isOpen, onClose, favorite }) => {
   const filter = new Filter();
   const age = Cookies.get('age');
 
@@ -37,16 +38,29 @@ const TranslateEdite = ({isOpen, onClose, favorite}) => {
 
   // Early return here AFTER hooks are initialized
   if (!isOpen || !favorite) return null;
-
+  const paid = Cookies.get('paid');
   const handleTranslateText = () => {
-    translateText(
-      fromText,
-      fromLang,
-      toLang,
-      setLoading,
-      setError,
-      setTranslatedText
-    );
+    if (paid == 'no') {
+      translateText(
+        fromText,
+        fromLang,
+        toLang,
+        setLoading,
+        setError,
+        setTranslatedText
+      );
+    }
+
+    if (paid == 'yes') {
+      translateTextPro(
+        fromText,
+        fromLang,
+        toLang,
+        setLoading,
+        setError,
+        setTranslatedText
+      );
+    }
   };
 
   const handleLanguageSwap = () => {
@@ -110,21 +124,20 @@ const TranslateEdite = ({isOpen, onClose, favorite}) => {
   };
 
   // Function to add translation to favorites
-const handleUpdateFavorite = async () => {
-  if (fromText && translatedText) {
-    try {
-      await updateFavorite(fromText, translatedText, favorite._id);
-      alert('Favorite updated!');
-      onClose();
-    } catch (error) {
-      console.error('Failed to update favorite:', error);
-      alert('Failed to update favorite. Please try again.');
+  const handleUpdateFavorite = async () => {
+    if (fromText && translatedText) {
+      try {
+        await updateFavorite(fromText, translatedText, favorite._id);
+        alert('Favorite updated!');
+        onClose();
+      } catch (error) {
+        console.error('Failed to update favorite:', error);
+        alert('Failed to update favorite. Please try again.');
+      }
+    } else {
+      alert('Please translate the text before updating favorites.');
     }
-  } else {
-    alert('Please translate the text before updating favorites.');
-  }
-};
-
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ">

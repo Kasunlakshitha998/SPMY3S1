@@ -4,6 +4,7 @@ import { translateText } from './translateText';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { translateTextPro } from './pro/translateTextPro';
 
 const TranslatorImage = ({ fromLang, toLang }) => {
   const [imageBase64, setImageBase64] = useState('');
@@ -62,16 +63,30 @@ const TranslatorImage = ({ fromLang, toLang }) => {
         setLoading(false);
       });
   };
-
+const paid = Cookies.get('paid');
   const handleTranslateImageText = () => {
-    translateText(
-      fromText,
-      fromLang,
-      toLang,
-      setLoading,
-      setError,
-      setTranslatedText,
-    );
+
+        if (paid == 'no') {
+          translateText(
+            fromText,
+            fromLang,
+            toLang,
+            setLoading,
+            setError,
+            setTranslatedText
+          );
+        }
+
+        if (paid == 'yes') {
+          translateTextPro(
+            fromText,
+            fromLang,
+            toLang,
+            setLoading,
+            setError,
+            setTranslatedText
+          );
+        }
   };
 
   const currentUserId = Cookies.get('userId');; 

@@ -4,7 +4,8 @@ import Cookies from 'js-cookie';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_CLOUD_API_KEY; // Use environment variable
+//const GOOGLE_API_KEY = 'AIzaSyAXYSzBc9m-ubpn1vM0GIzFoIF6oKfgNbc';
+const GOOGLE_API_KEY = 'AI';
 
 export const translateTextPro = async (
   text,
@@ -22,25 +23,25 @@ export const translateTextPro = async (
   setLoading(true);
   setError('');
 
-  //const apiUrl = `https://translation.googleapis.com/language/translate/v2?key=${GOOGLE_API_KEY}`;
+  const apiUrl = `https://translation.googleapis.com/language/translate/v2?key=${GOOGLE_API_KEY}`;
 
   try {
-    // const response = await axios.post(apiUrl, {
-    //   q: text, // The text to translate
-    //   source: fromLang, // Source language (optional)
-    //   target: toLang, // Target language
-    //   format: 'text', // Optional: Specifies the format of the source text (either "text" or "html")
-    // });
-    const filter = 1;
-    console.log('Filter enabled:', filter); // Confirm that 1 or 0 is being sent
-    const response = await axios.post(
-      'http://localhost:5000/api/translate',
-      { text, toLang, filter }, // Send filter as 0 or 1
-      { withCredentials: true }
-    );
-    const translatedText = response.data.translation;
+    const response = await axios.post(apiUrl, {
+      q: text, // The text to translate
+      source: fromLang, // Source language (optional)
+      target: toLang, // Target language
+      format: 'text', // Optional: Specifies the format of the source text (either "text" or "html")
+    });
+    // const filter = 1;
+    // console.log('Filter enabled:', filter); // Confirm that 1 or 0 is being sent
+    // const response = await axios.post(
+    //   'http://localhost:5000/api/translate',
+    //   { text, toLang, filter }, // Send filter as 0 or 1
+    //   { withCredentials: true }
+    // );
+    //const translatedText = response.data.translation;
 
-    // const translatedText = response.data.data.translations[0].translatedText;
+   const translatedText = response.data.data.translations[0].translatedText;
 
     // Check for an empty translatedText
     if (translatedText === '') {
