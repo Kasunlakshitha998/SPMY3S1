@@ -61,8 +61,35 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something went wrong!');
 });
 
+// Set Content-Type for all responses to ensure UTF-8 encoding
+app.use((req, res, next) => {
+  res.set('Content-Type', 'application/json; charset=utf-8');
+  next();
+});
+
+// Example route for fetching history
+app.get('/api/history', async (req, res) => {
+  try {
+    // Fetch your history data from the database here
+    const historyData = await getHistoryFromDatabase();
+
+    // Set the Content-Type header for UTF-8 encoding
+    res.set('Content-Type', 'application/json; charset=utf-8');
+
+    // Send the response
+    res.json(historyData);
+  } catch (error) {
+    console.error('Failed to fetch history:', error);
+    res.status(500).json({ message: 'Error fetching history' });
+  }
+});
+
 // Start server
 const PORT = process.env.PORT || 8175;
 app.listen(PORT, () => {
   console.log(`Server is up and running on port: ${PORT}`);
 });
+
+
+
+

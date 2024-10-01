@@ -14,18 +14,19 @@ export const deleteHistoryEntry = (id) => API.delete(`/history/delete/${id}`);
 export const clearHistory = async () => {
   return API.delete('/history/clear');
 };
-// Save Bookmark
+
 export const saveBookmark = async ({ userId, entryId, color }) => {
-  const response = await API.post(`/bookmarks`, { // Change '/bookmark' to '/bookmarks'
+  const response = await API.post(`/bookmarks`, {
     userId,
     entryId,
     color,
   });
   return response.data;
 };
+
 // Get Bookmarks for a user
 export const getBookmarks = async (userId) => {
-  const response = await axios.get(`${API}/bookmarks/${userId}`);
+  const response = await API.get(`/bookmarks/${userId}`);
   return response.data;
 };
 

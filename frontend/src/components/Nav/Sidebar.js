@@ -39,12 +39,24 @@ const Sidebar = () => {
             {/* History Link */}
             <li className="mb-6">
               <NavLink
+                to="/favorites"
+                activeClassName="bg-blue-500 text-white"
+                className="flex items-center px-6 py-3 hover:bg-blue-500 hover:text-white text-gray-800 transition-colors duration-200"
+              >
+                <span className="text-xl mr-4">📜</span>
+                <span className="text-lg">Save Images</span>
+              </NavLink>
+            </li>
+
+            {/* History Link */}
+            <li className="mb-6">
+              <NavLink
                 to="/history"
                 activeClassName="bg-blue-500 text-white"
                 className="flex items-center px-6 py-3 hover:bg-blue-500 hover:text-white text-gray-800 transition-colors duration-200"
               >
                 <span className="text-xl mr-4">📜</span>
-                <span className="text-lg">History</span>
+                <span className="text-lg">Text / Image History</span>
               </NavLink>
             </li>
 

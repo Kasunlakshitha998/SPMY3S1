@@ -24,6 +24,9 @@ router.post('/add', (req, res) => {
 router.get('/', (req, res) => {
   History.find()
     .then((history) => {
+      // Set the Content-Type header for UTF-8 encoding
+      res.set('Content-Type', 'application/json; charset=utf-8');
+
       res.json(history);
     })
     .catch((err) => {
@@ -115,35 +118,25 @@ router.delete('/clear', async (req, res) => {
   }
 });
 
-// Save bookmark
+// Define the route for saving bookmarks
 router.post('/bookmarks', async (req, res) => {
   const { userId, entryId, color } = req.body;
   try {
-    // Check if the bookmark already exists for this user and entry
-    const existingBookmark = await Bookmark.findOne({ userId, entryId });
-    if (existingBookmark) {
-      // If it exists, update it instead of creating a new one
-      existingBookmark.color = color;
-      await existingBookmark.save();
-      return res.status(200).json({ message: 'Bookmark updated!' });
-    }
-
-    // Otherwise, create a new bookmark
-    const bookmark = new Bookmark({ userId, entryId, color });
-    await bookmark.save();
-    res.status(201).json({ message: 'Bookmark saved!' });
+    const newBookmark = new Bookmark({ userId, entryId, color });
+    await newBookmark.save();
+    res.status(201).json(newBookmark); // Respond with the created bookmark
   } catch (error) {
-    res.status(500).json({ message: 'Failed to save bookmark', error });
+    res.status(500).json({ message: 'Error saving bookmark' });
   }
 });
 
-// Fetch bookmarks for a user
+// Get bookmarks for a specific user
 router.get('/bookmarks/:userId', async (req, res) => {
   try {
     const bookmarks = await Bookmark.find({ userId: req.params.userId });
     res.status(200).json(bookmarks);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch bookmarks', error });
+    res.status(500).json({ message: 'Error fetching bookmarks' });
   }
 });
 
