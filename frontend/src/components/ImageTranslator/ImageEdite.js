@@ -18,17 +18,17 @@ const ImageEdite = ({ isOpen, onClose, item }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isDragOver, setIsDragOver] = useState(false);
-  const [fromLang, setFromLang] = useState(item?.fromLang || 'en');
-  const [toLang, setToLang] = useState(item?.toLang || 'si');
+  const [fromLang, setFromLang] = useState(item?.fromLang || 'eng'); // 'eng' for English
+  const [toLang, setToLang] = useState(item?.toLang || 'sin'); // 'sin' for Sinhala
 
-  // Effect to reset state when `item` changes
+  // Reset state when `item` changes
   useEffect(() => {
     if (item) {
       setImageBase64(item.image || '');
       setFromText(item.originalText || '');
       setTranslatedText(item.translatedText || '');
-      setFromLang(item.fromLang || 'en');
-      setToLang(item.toLang || 'si');
+      setFromLang(item.fromLang || 'eng');
+      setToLang(item.toLang || 'sin');
     }
   }, [item]);
 
@@ -74,15 +74,27 @@ const ImageEdite = ({ isOpen, onClose, item }) => {
   // Extract text from image using Tesseract.js
   const extractTextFromImage = (base64Image) => {
     setLoading(true);
-    Tesseract.recognize(base64Image, fromLang, { logger: (m) => console.log(m) })
+    setError('');
+    Tesseract.recognize(base64Image, fromLang, {
+      langPath: 'https://tessdata.projectnaptha.com/4.0.0_best/', // Correct langPath
+      logger: (m) => console.log(m),
+    })
       .then(({ data: { text } }) => {
         setFromText(text);
         setLoading(false);
+        toast.success('Text extracted successfully!', {
+          position: 'top-right',
+          autoClose: 2000,
+        });
       })
       .catch((err) => {
-        console.error(err);
+        console.error('Tesseract.js Error:', err);
         setError('Failed to extract text from the image.');
         setLoading(false);
+        toast.error('Failed to extract text from the image.', {
+          position: 'top-right',
+          autoClose: 3000,
+        });
       });
   };
 
@@ -91,6 +103,16 @@ const ImageEdite = ({ isOpen, onClose, item }) => {
 
   // Handle translation of extracted text
   const handleTranslateImageText = () => {
+    if (!fromText.trim()) {
+      setError('No text available to translate.');
+      toast.error('No text available to translate.', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    setError('');
     if (paid === 'no') {
       translateText(
         fromText,
@@ -126,11 +148,19 @@ const ImageEdite = ({ isOpen, onClose, item }) => {
   const handleUpdate = async () => {
     if (!imageBase64) {
       setError('No image selected.');
+      toast.error('No image selected.', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
       return;
     }
 
     if (!translatedText.trim()) {
       setError('Translated text cannot be empty.');
+      toast.error('Translated text cannot be empty.', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
       return;
     }
 
@@ -152,9 +182,12 @@ const ImageEdite = ({ isOpen, onClose, item }) => {
       });
       onClose();
     } catch (err) {
-      console.error(err);
+      console.error('Update Error:', err);
       setError('Failed to update the data.');
-      toast.error('Failed to update the data.');
+      toast.error('Failed to update the data.', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
     }
   };
 
@@ -192,31 +225,34 @@ const ImageEdite = ({ isOpen, onClose, item }) => {
           )}
 
           {/* Drag-and-Drop or Upload Area */}
-          <div
-            className={`border-2 border-dashed border-gray-300 rounded-lg p-6 mb-4 ${
-              isDragOver ? 'bg-gray-100 border-blue-500' : 'bg-gray-50'
-            }`}
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-          >
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="hidden"
-              id="fileInput"
-            />
-            <label
-              htmlFor="fileInput"
-              className="cursor-pointer text-center block text-gray-600 hover:text-gray-800"
-            >
-              Drag and drop an image here or click to upload
-            </label>
-          </div>
+          
 
           {/* Loading Indicator */}
-          {loading && <p>Loading...</p>}
+          {loading && (
+            <div className="flex items-center">
+              <svg
+                className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                ></path>
+              </svg>
+              <span>Processing...</span>
+            </div>
+          )}
 
           {/* Extracted Text (Read-Only) */}
           <textarea
@@ -227,12 +263,7 @@ const ImageEdite = ({ isOpen, onClose, item }) => {
           />
 
           {/* Translate Button */}
-          <button
-            onClick={handleTranslateImageText}
-            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
-          >
-            Translate Image Text
-          </button>
+       
 
           {/* Translated Text (Editable) */}
           {translatedText && (
