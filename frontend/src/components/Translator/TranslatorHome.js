@@ -280,19 +280,11 @@ const TranslatorHome = ({ handleLogout }) => {
                 <p className="text-red-500 text-center mt-2">{error}</p>
               )}
 
-              {/* Add to Favorite Button */}
-              {/* <button
-                onClick={handleAddToFavorite}
-                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-lg flex items-center mt-4"
-              >
-                <HeartIcon className="h-6 w-6 mr-2" />
-                Add to Favorites
-              </button> */}
             </div>
           )}
 
           {/* Image Translation Tab */}
-          {activeTab === 'Image' && (
+          {activeTab === 'Image' && paid === 'yes' && (
             <div>
               <TranslatorImage
                 fromLang={fromLang}

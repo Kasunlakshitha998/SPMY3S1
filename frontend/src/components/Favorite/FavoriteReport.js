@@ -10,11 +10,14 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import moment from 'moment';
-import { Box, Button, ButtonGroup } from '@mui/material';
+import { Box, Button, ButtonGroup, Menu, MenuItem } from '@mui/material';
 import fileDownload from 'js-file-download'; // For file download
+import html2pdf from 'html2pdf.js'; // For PDF generation
+
 
 const FavoriteReport = ({ isOpen, onClose, favorite }) => {
   const [timePeriod, setTimePeriod] = useState('daily'); // 'daily', 'weekly', 'monthly'
+  const [anchorEl, setAnchorEl] = useState(null);
 
   // Group favorites based on the selected time period
   const groupedFavorites = useMemo(() => {
@@ -45,8 +48,7 @@ const FavoriteReport = ({ isOpen, onClose, favorite }) => {
   }, [favorite, timePeriod]);
 
   // Function to download the report as CSV
-  const downloadReport = () => {
-    // Convert groupedFavorites to CSV string
+  const downloadCSV = () => {
     const csvContent = [
       ['Time Period', 'Count'],
       ...groupedFavorites.map((item) => [item.time, item.count]),
@@ -54,9 +56,23 @@ const FavoriteReport = ({ isOpen, onClose, favorite }) => {
       .map((row) => row.join(','))
       .join('\n');
 
-    // Download the CSV file
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     fileDownload(blob, `favorite_report_${timePeriod}.csv`);
+  };
+
+  // Function to generate and download the report as PDF from hidden HTML table
+  const downloadPDF = () => {
+    const element = document.getElementById('hidden-table');
+    html2pdf().from(element).save(`favorite_report_${timePeriod}.pdf`);
+  };
+
+  // Handle download menu
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   // Early return if the modal isn't open
@@ -115,10 +131,67 @@ const FavoriteReport = ({ isOpen, onClose, favorite }) => {
 
         {/* Download Report Button */}
         <Box display="flex" justifyContent="center" my={4}>
-          <Button variant="contained" color="primary" onClick={downloadReport}>
-            Download Report as CSV
+          <Button variant="contained" color="primary" onClick={handleClick}>
+            Download Report
           </Button>
+          <Menu
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem
+              onClick={() => {
+                downloadCSV();
+                handleClose();
+              }}
+            >
+              Download as CSV
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                downloadPDF();
+                handleClose();
+              }}
+            >
+              Download as PDF
+            </MenuItem>
+          </Menu>
         </Box>
+
+        {/* Hidden table for PDF generation */}
+        <div style={{ display: 'none' }}>
+          <div id="hidden-table" className="p-4 bg-white shadow-md rounded-lg">
+            <h2 className="text-xl font-bold mb-4 text-center">
+              Favorite Report
+            </h2>
+            <table className="min-w-full border-collapse bg-white shadow-lg rounded-lg overflow-hidden">
+              <thead className="bg-blue-600 text-white">
+                <tr>
+                  <th className="px-4 py-2 text-left">#</th>
+                  <th className="px-4 py-2 text-left">Original Text</th>
+                  <th className="px-4 py-2 text-left">Translated Text</th>
+                  <th className="px-4 py-2 text-left">Created At</th>
+                </tr>
+              </thead>
+              <tbody>
+                {favorite.map((item, index) => (
+                  <tr
+                    key={index}
+                    className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}
+                  >
+                    <td className="border px-4 py-2">{index + 1}</td>
+                    <td className="border px-4 py-2">{item.text}</td>
+                    <td className="border px-4 py-2">{item.translatedText}</td>
+                    <td className="border px-4 py-2">
+                      {moment(item.createdAt).format('YYYY-MM-DD')}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );

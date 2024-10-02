@@ -207,9 +207,9 @@ const Favorites = ({ handleLogout }) => {
               onClick={handleSelectAll}
               className="p-2 px-4  bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-transform transform hover:scale-105"
             >
-              {selectedItems.length === currentItems.length
-                ? 'Deselect All'
-                : 'Select All'}
+              {selectedItems.length !== currentItems.length
+                ? 'Select All'
+                : 'DeSelect All'}
             </button>
 
             <button

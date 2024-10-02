@@ -14,6 +14,7 @@
     "@vitalets/google-translate-api": "^9.2.0",
     "axios": "^1.7.4",
     "bad-words": "^4.0.0",
+    "html2pdf.js": "^0.10.2",
     "js-cookie": "^3.0.5",
     "js-file-download": "^0.4.12",
     "jspdf": "^2.5.2",
