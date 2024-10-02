@@ -14,7 +14,7 @@ import Sidebar from '../Nav/Sidebar';
 import Cookies from 'js-cookie';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { translateTextPro } from './pro/translateTextPro';
 
 const TranslatorHome = ({ handleLogout }) => {
@@ -279,17 +279,28 @@ const TranslatorHome = ({ handleLogout }) => {
               {error && (
                 <p className="text-red-500 text-center mt-2">{error}</p>
               )}
-
             </div>
           )}
 
           {/* Image Translation Tab */}
           {activeTab === 'Image' && paid === 'yes' && (
             <div>
-              <TranslatorImage
-                fromLang={fromLang}
-                toLang={toLang}
-              />
+              <TranslatorImage fromLang={fromLang} toLang={toLang} />
+            </div>
+          )}
+
+          {activeTab === 'Image' && paid === 'no' && (
+            <div className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-md">
+              <p className="text-lg font-semibold text-red-500 mb-4">
+                You need to get the Pro version to access this feature.
+              </p>
+
+              <Link
+                to="/get-pro"
+                className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all duration-300"
+              >
+                Get Pro Version
+              </Link>
             </div>
           )}
         </div>

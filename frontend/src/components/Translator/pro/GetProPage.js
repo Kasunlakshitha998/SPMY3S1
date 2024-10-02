@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
@@ -31,11 +31,10 @@ const GetProPage = () => {
       try {
         const response = await axios.post(
           `http://localhost:5050/user/updatePaymentStatus/${userId}`,
-          { userId, isPaid: 'yes' } // You can also pass userId in the body if necessary
+          { userId, isPaid: 'yes' }
         );
 
         if (response.status === 200) {
-          // axios uses status instead of ok
           alert(`Payment successful for ${billingPeriod}!`);
           navigate('/login');
         } else {
@@ -62,30 +61,12 @@ const GetProPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br p-4">
-      <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-lg">
+    <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen bg-gradient-to-br p-4">
+      {/* Left Column - Card Details */}
+      <div className="bg-white rounded-xl shadow-xl p-8 w-full max-w-lg lg:mr-8">
         <h1 className="text-3xl font-bold text-gray-900 text-center mb-6">
           Upgrade to Pro
         </h1>
-
-        {/* Benefits */}
-        <div className="bg-indigo-100 p-6 rounded-lg mb-6">
-          <h2 className="text-xl font-semibold text-indigo-800 mb-4">
-            Why Go Pro?
-          </h2>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <div className="text-gray-600">Free Version:</div>
-              <div className="text-gray-600">Basic Translation Accuracy</div>
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="text-gray-900 font-semibold">Pro Version:</div>
-              <div className="text-green-600 font-bold">
-                More Accurate Translations
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Payment Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -188,7 +169,43 @@ const GetProPage = () => {
           >
             Pay Now
           </button>
+          <Link to="/">
+            <button
+              className="w-full py-3 mt-4 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all text-center"
+              type="button"
+            >
+              Cancel
+            </button>
+          </Link>
         </form>
+      </div>
+
+      {/* Right Column - Pro Version Details */}
+      <div className="bg-indigo-100 rounded-xl shadow-xl p-8 w-full max-w-lg mt-8 lg:mt-0 lg:ml-8">
+        <h2 className="text-2xl font-semibold text-indigo-800 mb-4">
+          Why Go Pro?
+        </h2>
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <div className="text-gray-600">Free Version:</div>
+            <div className="text-gray-600">Basic Translation Accuracy</div>
+          </div>
+          <div className="flex justify-between items-center">
+            <div className="text-gray-900 font-semibold">Pro Version:</div>
+            <div className="text-green-600 font-bold">
+              More Accurate Translations
+            </div>
+          </div>
+          <div className="flex justify-between items-center">
+            <div className="text-gray-900 font-semibold">Pro Features:</div>
+            <ul className="text-gray-600 list-disc pl-6">
+              <li>Unlimited Translations</li>
+              <li>High Accuracy Levels</li>
+              <li>Access to New Features</li>
+              <li>Priority Support</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   );
