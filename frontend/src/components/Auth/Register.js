@@ -18,14 +18,29 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const validateForm = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // General email format regex
+    const passwordMinLength = 8;
+  
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address');
+      return false;
+    }
+  
+    if (password.length < passwordMinLength) {
+      alert(`Password must be at least ${passwordMinLength} characters`);
+      return false;
+    }
+  
     if (password !== confirmPassword) {
       alert('Passwords do not match');
       return false;
     }
+  
     if (age < 1) {
       alert('Please enter a valid age');
       return false;
     }
+  
     return true;
   };
 

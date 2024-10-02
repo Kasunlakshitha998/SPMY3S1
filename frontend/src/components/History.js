@@ -94,7 +94,7 @@ const History = ({ handleLogout }) => {
     }));
 
     try {
-      await saveBookmark({ userId: currentUserId, entryId: id, color });
+      await saveBookmark({ userId: currentUserId, entryId: id, color: color || 'unmarked' });
     } catch (error) {
       console.error('Failed to save bookmark', error);
     }
@@ -439,13 +439,22 @@ const History = ({ handleLogout }) => {
                     {/* Bookmark Section */}
                     <div className="flex items-center space-x-2 mr-4">
                       {showColorPicker[entry._id] ? (
-                        colors.map((color) => (
+                        <div className="flex space-x-2">
+                          {colors.map((color) => (
+                            <button
+                              key={color}
+                              onClick={() => handleBookmark(entry._id, color)}
+                              className={`h-5 w-5 rounded-full ${colorClasses[color]} hover:bg-${color}-700 focus:outline-none`}
+                            />
+                          ))}
+                          {/* cross icon to remove the color */}
                           <button
-                            key={color}
-                            onClick={() => handleBookmark(entry._id, color)}
-                            className={`h-5 w-5 rounded-full ${colorClasses[color]} hover:bg-${color}-700 focus:outline-none`}
-                          />
-                        ))
+                            onClick={() => handleBookmark(entry._id, null)}  // Set bookmark to 'unmarked'
+                            className="text-gray-500 hover:text-red-500 focus:outline-none"
+                          >
+                            <XIcon className="h-5 w-5" />
+                          </button>
+                        </div>
                       ) : (
                         <div
                           className={`h-5 w-5 rounded-full ${bookmarks[entry._id] ? colorClasses[bookmarks[entry._id]] : 'bg-gray-300'}`}

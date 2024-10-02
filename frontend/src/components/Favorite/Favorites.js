@@ -229,42 +229,54 @@ const Favorites = ({ handleLogout }) => {
             )}
           </div>
 
+          X
+
           {/* Favorites Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-4xl">
-            {currentItems.map((fav) => (
-              // Favorites card
-
-              <div
-                key={fav._id}
-                className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 relative group border-l-8 border-yellow-500 cursor-pointer"
-              >
-                <input
-                  type="checkbox"
-                  className="absolute top-3 left-3 w-5 h-5 text-blue-600 focus:ring-0 group-hover:scale-110 transition-transform duration-200"
-                  checked={selectedItems.includes(fav._id)}
-                  onChange={() => handleSelectItem(fav._id)}
-                />
-
-                <PencilIcon
-                  className="absolute bottom-3 right-4 w-6 h-6 text-yellow-900"
-                  onClick={() => handleCardClick(fav)}
-                />
-
-                <div
-                  className="flex flex-col space-y-2 p-2 m-2"
-                  onClick={() => handleCardClick(fav)}
-                >
-                  <span className="text-lg font-semibold text-gray-900">
-                    {fav.text} -{' '}
-                    <span className="text-gray-600">{fav.translatedText}</span>
-                  </span>
-
-                  <span className="text-sm text-gray-600">
-                    Added on {moment(fav.createdAt).format('MMMM Do, YYYY')}
-                  </span>
-                </div>
+            {favorites.length === 0 ? (
+              // Modern Loading Indicator
+              <div className="flex justify-center items-center w-full h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
               </div>
-            ))}
+              
+            ) : (
+              // Display items if available
+              currentItems.map((fav) => (
+                // Favorites card
+                <div
+                  key={fav._id}
+                  className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 relative group border-l-8 border-yellow-500 cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    className="absolute top-3 left-3 w-5 h-5 text-blue-600 focus:ring-0 group-hover:scale-110 transition-transform duration-200"
+                    checked={selectedItems.includes(fav._id)}
+                    onChange={() => handleSelectItem(fav._id)}
+                  />
+
+                  <PencilIcon
+                    className="absolute bottom-3 right-4 w-6 h-6 text-yellow-900"
+                    onClick={() => handleCardClick(fav)}
+                  />
+
+                  <div
+                    className="flex flex-col space-y-2 p-2 m-2"
+                    onClick={() => handleCardClick(fav)}
+                  >
+                    <span className="text-lg font-semibold text-gray-900">
+                      {fav.text} -{' '}
+                      <span className="text-gray-600">
+                        {fav.translatedText}
+                      </span>
+                    </span>
+
+                    <span className="text-sm text-gray-600">
+                      Added on {moment(fav.createdAt).format('MMMM Do, YYYY')}
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
 
           {/* Popup Component */}
