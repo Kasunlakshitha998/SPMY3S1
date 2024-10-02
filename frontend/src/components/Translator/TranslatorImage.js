@@ -98,7 +98,7 @@ const paid = Cookies.get('paid');
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/imageSave/add', {
+      const response = await axios.post('http://localhost:5050/imageSave/add', {
         user: currentUserId, // Pass user info as needed
         image: imageBase64,
         originalText: fromText,

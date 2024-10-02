@@ -4,8 +4,8 @@ import Cookies from 'js-cookie';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-//const GOOGLE_API_KEY = 'AIzaSyAXYSzBc9m-ubpn1vM0GIzFoIF6oKfgNbc';
-const GOOGLE_API_KEY = 'AI';
+const GOOGLE_API_KEY = 'AIzaSyAXYSzBc9m-ubpn1vM0GIzFoIF6oKfgNbc';
+
 
 export const translateTextPro = async (
   text,
