@@ -126,6 +126,15 @@ const History = ({ handleLogout }) => {
 
   const generatePDFReport = () => {
     const pdf = new jsPDF();
+    // Set font size for the heading
+    pdf.setFontSize(18);
+    // Add heading text and center it
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const text = 'History Report (All)';
+    const textWidth = pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+    const textOffset = (pageWidth - textWidth) / 2; // Center the text
+    
+    pdf.text(text, textOffset, 20);
     pdf.text('History Report (All)', 20, 20);
     pdf.autoTable({
       head: [['Created At', 'Text', 'Translated Text']],
